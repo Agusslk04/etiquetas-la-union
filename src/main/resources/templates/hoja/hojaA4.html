@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Hoja A4')}"></head>
+<body>
+
+	<header th:replace="~{fragments/layout :: encabezado('hoja')}"></header>
+	<div th:replace="~{fragments/layout :: mensajes}"></div>
+
+	<main class="contenedor">
+
+		<section class="titulo-pagina">
+			<h1>Hoja A4</h1>
+			<p th:if="${productos.totalElements == 0}">4 etiquetas de 13 × 8 cm por hoja.</p>
+			<p th:unless="${productos.totalElements == 0}" id="resumenHoja" th:attr="data-total=${totalEtiquetas}">
+				<strong th:text="${#numbers.formatInteger(totalEtiquetas, 1, 'POINT')}">0</strong> <span th:text="${totalEtiquetas == 1} ? 'etiqueta' : 'etiquetas'">etiquetas</span>
+				· <strong th:text="${#numbers.formatInteger(totalHojas, 1, 'POINT')}">0</strong> <span th:text="${totalHojas == 1} ? 'hoja' : 'hojas'">hojas</span>
+				· 4 por hoja
+			</p>
+		</section>
+
+		<!-- Hoja vacía -->
+		<div class="tarjeta vacio" th:if="${productos.totalElements == 0}">
+			<img th:src="@{/img/icono.png}" alt="">
+			<h2>La hoja está vacía</h2>
+			<p>Agregá productos para imprimir varias etiquetas juntas en una hoja A4.</p>
+			<div class="botones">
+				<a th:href="@{/productos}" class="boton boton-secundario">Elegir de Productos</a>
+				<a th:href="@{/}" class="boton boton-principal">Nueva etiqueta</a>
+			</div>
+		</div>
+
+		<!-- Hoja con productos: precios editables, de a 15 -->
+		<form id="formHoja" class="tarjeta" th:action="@{/hoja}" method="post" th:unless="${productos.totalElements == 0}" autocomplete="off">
+			<input type="hidden" name="pagina" th:value="${productos.number}">
+
+			<div class="ajuste-masivo">
+				<span>Cambiar <strong>todos</strong> los precios de la hoja</span>
+				<div class="entrada-porcentaje">
+					<input type="text" id="porcentaje" name="porcentaje" class="entrada-chica" inputmode="decimal" placeholder="10" aria-label="Porcentaje">
+					<span>%</span>
+				</div>
+				<select id="redondeo" name="redondeo" class="entrada-chica" aria-label="Redondeo">
+					<option value="1">Redondear a $1</option>
+					<option value="10">Redondear a $10</option>
+					<option value="50">Redondear a $50</option>
+					<option value="100">Redondear a $100</option>
+				</select>
+				<button type="submit" name="accion" value="porcentaje" id="aplicarPorcentaje" formnovalidate
+					class="boton boton-chico boton-secundario" th:attr="data-cantidad=${productos.totalElements}">Aplicar</button>
+			</div>
+
+			<div class="barra-tabla">
+				<span class="resumen" th:text="${#numbers.formatInteger(productos.totalElements, 1, 'POINT')} + (${productos.totalElements == 1} ? ' producto' : ' productos')
+					+ (${productos.totalPages > 1} ? ' · página ' + ${productos.number + 1} + ' de ' + ${productos.totalPages} : '')">0 productos</span>
+				<span class="resumen">Los cambios se guardan al pasar de página</span>
+			</div>
+
+			<table class="tabla">
+				<thead>
+					<tr>
+						<th>Producto</th>
+						<th class="ocultar-movil">Código</th>
+						<th class="col-precio-editable">Precio</th>
+						<th class="col-copias">Copias</th>
+						<th class="col-quitar"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="p : ${productos.content}">
+						<td class="col-nombre" th:text="${p.nombre}">Producto</td>
+						<td class="col-codigo ocultar-movil" th:text="${p.codigoBarras}"></td>
+						<td class="col-precio-editable">
+							<input type="hidden" name="ids" th:value="${p.idProducto}">
+							<div class="entrada-precio chica">
+								<span>$</span>
+								<input type="text" name="precios" class="entrada campo-precio" inputmode="decimal" maxlength="14"
+									th:value="${p.precioEditable}" th:attr="data-original=${p.precioEditable}"
+									th:aria-label="'Precio de ' + ${p.nombre}" required>
+							</div>
+						</td>
+						<td class="col-copias">
+							<input type="number" name="copias" class="entrada entrada-copias campo-copias" min="1" max="20"
+								th:value="${p.copias}" th:attr="data-original=${p.copias}" th:aria-label="'Copias de ' + ${p.nombre}">
+						</td>
+						<td class="col-quitar">
+							<button type="submit" name="accion" th:value="'quitar:' + ${p.idProducto}" class="boton-quitar" formnovalidate
+								title="Quitar de la hoja" aria-label="Quitar de la hoja">×</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<nav th:replace="~{fragments/paginacion :: botones(${productos})}"></nav>
+
+			<div class="pie-hoja">
+				<div class="botones">
+					<button type="submit" name="accion" value="guardar" class="boton boton-secundario">
+						<svg th:replace="~{fragments/layout :: icono-guardar}"></svg>
+						Guardar precios
+					</button>
+					<button type="submit" name="accion" value="imprimir" class="boton boton-principal">
+						<svg th:replace="~{fragments/layout :: icono-imprimir}"></svg>
+						<span th:text="'Imprimir hoja (' + ${#numbers.formatInteger(totalEtiquetas, 1, 'POINT')} + ')'">Imprimir hoja</span>
+					</button>
+				</div>
+				<button type="submit" name="accion" value="vaciar" class="boton-texto peligro" formnovalidate
+					data-confirmar="¿Vaciar la hoja? Los productos siguen guardados en Productos.">Vaciar hoja</button>
+			</div>
+		</form>
+
+	</main>
+
+	<footer th:replace="~{fragments/layout :: pie}"></footer>
+	<script th:src="@{/js/etiqueta.js}"></script>
+	<script th:src="@{/js/hoja.js}"></script>
+</body>
+</html>

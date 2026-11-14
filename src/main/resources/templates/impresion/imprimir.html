@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Imprimir · Etiquetas La Unión</title>
+	<link rel="icon" type="image/png" th:href="@{/img/icono.png}">
+	<link rel="stylesheet" th:href="@{/css/fuentes.css}">
+	<link rel="stylesheet" th:href="@{/css/etiqueta.css}">
+	<link rel="stylesheet" th:href="@{/css/app.css}">
+	<link rel="stylesheet" th:href="@{/css/impresion.css}">
+	<script th:src="@{/js/comun.js}" defer></script>
+</head>
+<body class="pagina-impresion">
+
+	<!-- Barra (no se imprime) -->
+	<div class="barra-impresion no-imprimir">
+		<div class="izquierda">
+			<a th:href="@{${volver}}" class="boton boton-secundario boton-chico" th:text="'‹ ' + ${textoVolver}">‹ Volver</a>
+		</div>
+		<div class="barra-info">
+			<strong th:text="${totalEtiquetas == 1} ? '1 etiqueta' : ${totalEtiquetas} + ' etiquetas'">1 etiqueta</strong>
+			<span th:text="'A4 horizontal · ' + ${paginas.size()} + (${paginas.size() == 1} ? ' hoja' : ' hojas')">A4 horizontal · 1 hoja</span>
+		</div>
+		<div class="derecha">
+			<form th:if="${origen == 'hoja'}" th:action="@{/hoja}" method="post">
+				<button type="submit" name="accion" value="vaciar" class="boton boton-secundario boton-chico"
+					data-confirmar="¿Vaciar la hoja? Los productos siguen guardados.">Vaciar hoja</button>
+			</form>
+			<button type="button" class="boton boton-principal boton-chico" onclick="window.print()">
+				<svg th:replace="~{fragments/layout :: icono-imprimir}"></svg>
+				Imprimir
+			</button>
+		</div>
+	</div>
+
+	<!-- Excel (solo imprimir): filas que no se pudieron usar -->
+	<details class="aviso-impresion no-imprimir" th:if="${filasConError != null and !filasConError.isEmpty()}">
+		<summary th:text="${conError == 1} ? '1 fila del Excel tiene errores y no se imprimió (ver)'
+			: ${conError} + ' filas del Excel tienen errores y no se imprimieron (ver)'">Filas con errores</summary>
+		<ul>
+			<li th:each="f : ${filasConError}" th:text="${f}"></li>
+		</ul>
+	</details>
+
+	<!-- Hojas A4 -->
+	<div class="hojas">
+		<div class="hoja-marco" th:each="pagina : ${paginas}">
+			<section class="hoja">
+
+				<!-- Marcas de corte -->
+				<svg class="marcas-corte" viewBox="0 0 297 210" aria-hidden="true">
+					<g stroke="#9A9AA6" stroke-width=".25">
+						<path d="M18.5 16v6M148.5 16v6M278.5 16v6M18.5 188v6M148.5 188v6M278.5 188v6" />
+						<path d="M9.5 25h6M9.5 105h6M9.5 185h6M281.5 25h6M281.5 105h6M281.5 185h6" />
+					</g>
+				</svg>
+
+				<div class="grilla">
+					<th:block th:each="p : ${pagina}">
+						<article th:replace="~{fragments/etiqueta :: etiqueta(${p.nombre}, ${p.precioEntero}, ${p.precioCentavos}, ${p.codigoBarras}, ${hoy})}"></article>
+					</th:block>
+				</div>
+			</section>
+		</div>
+	</div>
+
+	<p class="consejo no-imprimir">
+		Si algo sale corrido, en la ventana de impresión elegí <strong>Escala: Predeterminada</strong>
+		y <strong>Márgenes: Ninguno</strong>. Cortá siguiendo las marcas grises.
+	</p>
+
+	<script th:src="@{/js/etiqueta.js}"></script>
+	<script th:src="@{/js/impresion.js}"></script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Carga de Excel')}"></head>
+<body>
+
+	<header th:replace="~{fragments/layout :: encabezado('cargas')}"></header>
+	<div th:replace="~{fragments/layout :: mensajes}"></div>
+
+	<main class="contenedor">
+
+		<section class="titulo-pagina">
+			<h1 th:text="${carga.nombreArchivo}">productos.xlsx</h1>
+			<p>
+				Guardado el <strong th:text="${#temporals.format(carga.fecha, 'dd/MM/yyyy')}">01/01/2026</strong>
+				a las <strong th:text="${#temporals.format(carga.fecha, 'HH:mm')}">10:00</strong>
+			</p>
+		</section>
+
+		<!-- Resumen -->
+		<div class="cifras">
+			<div class="cifra nuevo"><strong th:text="${#numbers.formatInteger(carga.nuevos, 1, 'POINT')}">0</strong><span>Guardados</span></div>
+			<div class="cifra"><strong th:text="${#numbers.formatInteger(carga.yaEstaban, 1, 'POINT')}">0</strong><span>Ya estaban cargados</span></div>
+			<div class="cifra actualizado"><strong th:text="${#numbers.formatInteger(carga.repetidos, 1, 'POINT')}">0</strong><span>Repetidos en el archivo</span></div>
+			<div class="cifra error"><strong th:text="${#numbers.formatInteger(carga.conError, 1, 'POINT')}">0</strong><span>Con error</span></div>
+		</div>
+
+		<!-- Generar las etiquetas -->
+		<form class="acciones-centro" th:if="${productos.totalElements > 0}" method="post"
+			th:action="@{/cargas/{id}/hoja(id=${carga.idCarga})}">
+			<a class="boton boton-principal" th:href="@{/imprimir/carga/{id}(id=${carga.idCarga})}">
+				<svg th:replace="~{fragments/layout :: icono-imprimir}"></svg>
+				<span th:text="${productos.totalElements == 1} ? 'Imprimir 1 etiqueta' : 'Imprimir ' + ${#numbers.formatInteger(productos.totalElements, 1, 'POINT')} + ' etiquetas'">Imprimir etiquetas</span>
+			</a>
+			<button type="submit" class="boton boton-secundario">
+				<svg th:replace="~{fragments/layout :: icono-hoja}"></svg>
+				Agregar a hoja A4
+			</button>
+		</form>
+		<p class="nota-centro" th:if="${productos.totalElements > 0}">
+			Para cambiar precios o copias antes de imprimir, usá <strong>Agregar a hoja A4</strong>.
+		</p>
+
+		<!-- Detalle de lo que no se guardó (solo justo después de subir el archivo) -->
+		<th:block th:fragment="observaciones">
+			<div class="tarjeta observaciones" th:if="${filasConError != null and !filasConError.isEmpty()}">
+				<h2 th:text="'Filas con error, no se usaron (' + ${conError} + ')'">Filas con error</h2>
+				<ul>
+					<li th:each="f : ${filasConError}" th:text="${f}"></li>
+					<li th:if="${conError > filasConError.size()}" class="suave"
+						th:text="'… y ' + ${conError - filasConError.size()} + ' filas más.'"></li>
+				</ul>
+			</div>
+
+			<div class="tarjeta observaciones neutra" th:if="${productosYaCargados != null and !productosYaCargados.isEmpty()}">
+				<h2 th:text="'Ya estaban cargados, no se repitieron (' + ${yaCargados} + ')'">Ya estaban cargados</h2>
+				<ul>
+					<li th:each="p : ${productosYaCargados}" th:text="${p}"></li>
+					<li th:if="${yaCargados > productosYaCargados.size()}" class="suave"
+						th:text="'… y ' + ${yaCargados - productosYaCargados.size()} + ' productos más.'"></li>
+				</ul>
+			</div>
+
+			<div class="tarjeta observaciones aviso" th:if="${codigosRepetidos != null and !codigosRepetidos.isEmpty()}">
+				<h2 th:text="'Códigos repetidos dentro del archivo (' + ${repetidos} + ')'">Códigos repetidos</h2>
+				<ul>
+					<li th:each="a : ${codigosRepetidos}" th:text="${a}"></li>
+					<li th:if="${repetidos > codigosRepetidos.size()}" class="suave"
+						th:text="'… y ' + ${repetidos - codigosRepetidos.size()} + ' más.'"></li>
+				</ul>
+			</div>
+		</th:block>
+
+		<!-- Productos guardados en esta carga, de a 15 -->
+		<section class="tarjeta">
+			<div class="tarjeta-titulo">
+				<h2>Productos guardados</h2>
+				<span th:text="${#numbers.formatInteger(productos.totalElements, 1, 'POINT')} + (${productos.totalElements == 1} ? ' producto' : ' productos')
+					+ (${productos.totalPages > 1} ? ' · página ' + ${productos.number + 1} + ' de ' + ${productos.totalPages} : '')">0 productos</span>
+			</div>
+			<table class="tabla">
+				<thead>
+					<tr>
+						<th class="centro col-num">#</th>
+						<th>Producto</th>
+						<th class="ocultar-movil">Código</th>
+						<th class="der">Precio</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:if="${productos.totalElements == 0}">
+						<td colspan="4" class="suave">Los productos de esta carga se borraron.</td>
+					</tr>
+					<tr th:each="p, i : ${productos.content}">
+						<td class="centro col-num" th:text="${productos.number * productos.size + i.count}">1</td>
+						<td class="col-nombre" th:text="${p.nombre}">Producto</td>
+						<td class="col-codigo ocultar-movil" th:text="${p.codigoBarras}"></td>
+						<td class="der col-precio" th:text="${p.precioTexto}">$ 0</td>
+					</tr>
+				</tbody>
+			</table>
+			<nav th:replace="~{fragments/paginacion :: enlaces(${productos}, '/cargas/' + ${carga.idCarga})}"></nav>
+		</section>
+
+		<form class="centro" method="post" th:action="@{/cargas/{id}/eliminar(id=${carga.idCarga})}">
+			<button type="submit" class="boton-texto peligro"
+				data-confirmar="¿Borrar esta carga del historial? Los productos siguen guardados.">Borrar del historial</button>
+		</form>
+
+	</main>
+
+	<footer th:replace="~{fragments/layout :: pie}"></footer>
+</body>
+</html>

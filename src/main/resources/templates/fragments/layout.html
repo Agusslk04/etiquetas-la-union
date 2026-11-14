@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="head(titulo)">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title th:text="${titulo} + ' · Etiquetas La Unión'">Etiquetas La Unión</title>
+	<link rel="icon" type="image/png" th:href="@{/img/icono.png}">
+	<link rel="stylesheet" th:href="@{/css/fuentes.css}">
+	<link rel="stylesheet" th:href="@{/css/etiqueta.css}">
+	<link rel="stylesheet" th:href="@{/css/app.css}">
+	<script th:src="@{/js/comun.js}" defer></script>
+</head>
+
+<body>
+
+	<!-- Encabezado: logo centrado y tres pestañas -->
+	<header th:fragment="encabezado(activo)" class="encabezado">
+		<a th:href="@{/}" class="encabezado-logo">
+			<img th:src="@{/img/logo-la-union.png}" alt="La Unión Supermercado">
+		</a>
+		<nav class="pestanas">
+			<a th:href="@{/}" th:classappend="${activo == 'nueva'} ? 'activa'">Nueva etiqueta</a>
+			<a th:href="@{/cargas}" th:classappend="${activo == 'cargas'} ? 'activa'">Carga Excel</a>
+			<a th:href="@{/productos}" th:classappend="${activo == 'productos'} ? 'activa'">Productos</a>
+			<a th:href="@{/hoja}" th:classappend="${activo == 'hoja'} ? 'activa'">
+				Hoja A4
+				<span class="contador" th:if="${cantidadHoja > 0}" th:text="${cantidadHoja}">0</span>
+			</a>
+		</nav>
+	</header>
+
+	<!-- Pie: dirección para entrar desde otras compus -->
+	<footer th:fragment="pie" class="pie">
+		<span th:if="${direccionRed}">
+			Desde otra compu de la red: <strong th:text="${direccionRed}">http://192.168.0.10:8081</strong>
+		</span>
+		<span th:unless="${direccionRed}">La Unión Supermercado · Etiquetas</span>
+	</footer>
+
+	<!-- Avisos que aparecen abajo al centro -->
+	<div th:fragment="mensajes" class="mensajes" aria-live="polite">
+		<div class="mensaje ok" th:if="${mensaje}" th:text="${mensaje}"></div>
+		<div class="mensaje error" th:if="${error}" th:text="${error}"></div>
+		<th:block th:if="${errores}">
+			<div class="mensaje error" th:each="e : ${errores}" th:text="${e}"></div>
+		</th:block>
+	</div>
+
+	<!-- Íconos -->
+	<svg th:fragment="icono-imprimir" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+		stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+		<path d="M6 9V3h12v6" />
+		<rect x="3" y="9" width="18" height="8" rx="2" />
+		<path d="M6 14h12v7H6z" />
+	</svg>
+
+	<svg th:fragment="icono-hoja" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+		stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+		<path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" />
+		<path d="M14 3v6h6" />
+		<path d="M12 12v6M9 15h6" />
+	</svg>
+
+	<svg th:fragment="icono-excel" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+		stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+		<path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" />
+		<path d="M14 3v6h6" />
+		<path d="M8 12h8M8 15.5h8M8 19h8M12 12v7" />
+	</svg>
+
+	<svg th:fragment="icono-subir" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+		stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+		<path d="M12 16V4M7 9l5-5 5 5" />
+		<path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" />
+	</svg>
+
+	<svg th:fragment="icono-bajar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+		stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+		<path d="M12 4v12M7 11l5 5 5-5" />
+		<path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" />
+	</svg>
+
+	<svg th:fragment="icono-guardar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+		stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+		<path d="M20 6 9 17l-5-5" />
+	</svg>
+
+</body>
+</html>

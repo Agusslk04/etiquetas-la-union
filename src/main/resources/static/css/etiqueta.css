@@ -1,0 +1,182 @@
+/* =========================================================
+   Etiqueta de precio · 13 x 8 cm · La Unión Supermercado
+   Todo en milímetros para que salga exacta al imprimir.
+   ========================================================= */
+
+.etiqueta {
+	--et-naranja: #ED672B;
+	--et-azul: #273172;
+	--et-crema: #FFF8EE;
+
+	position: relative;
+	width: 130mm;
+	height: 80mm;
+	overflow: hidden;
+	box-sizing: border-box;
+	background: var(--et-crema);
+	color: var(--et-azul);
+	font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;
+	-webkit-print-color-adjust: exact;
+	print-color-adjust: exact;
+	user-select: none;
+	/* Cada etiqueta se calcula sola: imprimir cientos de etiquetas sigue siendo rápido */
+	contain: strict;
+}
+
+.etiqueta * { box-sizing: border-box; }
+
+/* Fondo: manchas superiores y ola inferior (SVG) */
+.et-fondo {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	display: block;
+}
+
+/* Logo centrado arriba */
+.et-logo {
+	position: absolute;
+	top: 4.6mm;
+	left: 50%;
+	height: 12mm;
+	width: auto;
+	transform: translateX(-50%);
+	display: block;
+}
+
+/* Nombre del producto */
+.et-nombre {
+	position: absolute;
+	top: 19.4mm;
+	left: 7mm;
+	right: 7mm;
+	height: 15.6mm;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+}
+
+.et-nombre span {
+	display: block;
+	width: 100%;
+	font-weight: 800;
+	font-size: 8.6mm;
+	line-height: 1.06;
+	letter-spacing: -0.01em;
+	text-transform: uppercase;
+	text-wrap: balance; /* reparte el texto parejo entre las dos líneas */
+}
+
+.et-nombre span.et-vacio { opacity: .28; }
+
+/* Precio: píldora naranja */
+.et-precio {
+	position: absolute;
+	top: 37mm;
+	left: 9mm;
+	right: 9mm;
+	height: 22.6mm;
+	padding: 0 7mm;
+	border-radius: 11.3mm;
+	background: linear-gradient(180deg, #F47E35 0%, #EC6328 55%, #E4561F 100%);
+	box-shadow: 0 0.8mm 0 #C84A19;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #fff;
+}
+
+.et-precio-valor {
+	display: inline-flex;
+	align-items: flex-start;
+	white-space: nowrap;
+	font-weight: 800;
+	font-size: 19mm;
+	line-height: 1;
+	letter-spacing: -0.02em;
+}
+
+.et-signo {
+	font-size: .46em;
+	font-weight: 700;
+	margin: .2em .14em 0 0;
+}
+
+.et-centavos {
+	font-size: .42em;
+	font-weight: 700;
+	margin: .2em 0 0 .06em;
+}
+
+.et-centavos.vacio { display: none; }
+
+/* Pie: fecha · código de barras · precio final */
+.et-lado {
+	position: absolute;
+	bottom: 3.3mm;
+	width: 36mm;
+	text-align: center;
+	color: #fff;
+	line-height: 1.05;
+}
+
+.et-lado.izq { left: 3mm; }
+.et-lado.der { right: 3mm; }
+
+.et-lado small {
+	display: block;
+	margin-bottom: .7mm;
+	font-size: 2.1mm;
+	font-weight: 600;
+	letter-spacing: .35mm;
+	text-transform: uppercase;
+	opacity: .95;
+}
+
+.et-lado strong {
+	display: block;
+	font-size: 3.7mm;
+	font-weight: 800;
+	letter-spacing: .1mm;
+	text-transform: uppercase;
+}
+
+.et-codigo {
+	position: absolute;
+	left: 50%;
+	bottom: 2.6mm;
+	width: 46mm;
+	height: 15mm;
+	padding: 1.3mm 3mm 1.1mm;
+	transform: translateX(-50%);
+	background: #fff;
+	border: .5mm solid var(--et-naranja);
+	border-radius: 2.6mm;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+/* 36 mm de barras: deja ~4,5 mm de blanco a cada lado (zona de silencio para el lector) */
+.et-codigo img {
+	display: block;
+	width: 36mm;
+	height: 8.4mm;
+}
+
+.et-codigo span {
+	display: block;
+	margin-top: .9mm;
+	font-size: 2.5mm;
+	font-weight: 600;
+	line-height: 1;
+	letter-spacing: .45mm;
+	color: #1C2150;
+	white-space: nowrap;
+}
+
+.et-codigo.et-vacio img { opacity: .14; }
+.et-codigo.et-vacio span { opacity: .45; letter-spacing: .1mm; }

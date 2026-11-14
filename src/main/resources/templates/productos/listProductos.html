@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Productos')}"></head>
+<body>
+
+	<header th:replace="~{fragments/layout :: encabezado('productos')}"></header>
+	<div th:replace="~{fragments/layout :: mensajes}"></div>
+
+	<main class="contenedor">
+
+		<section class="titulo-pagina">
+			<h1>Productos</h1>
+			<p>Todo lo que cargaste queda guardado acá para volver a imprimirlo.</p>
+		</section>
+
+		<form class="buscador" method="get" th:action="@{/productos}">
+			<input type="search" name="q" class="entrada" th:value="${q}" placeholder="Buscar por nombre o código"
+				aria-label="Buscar" autofocus>
+			<button type="submit" class="boton boton-principal">Buscar</button>
+		</form>
+
+		<!-- Sin resultados -->
+		<div class="tarjeta vacio" th:if="${productos.totalElements == 0}">
+			<img th:src="@{/img/icono.png}" alt="">
+			<h2 th:text="${#strings.isEmpty(q)} ? 'Todavía no hay productos' : 'No se encontró nada'">Todavía no hay productos</h2>
+			<p th:if="${#strings.isEmpty(q)}">Cuando imprimas tu primera etiqueta, el producto aparece acá.</p>
+			<p th:unless="${#strings.isEmpty(q)}">Probá con otra palabra o con el código de barras.</p>
+			<div class="botones">
+				<a th:href="@{/productos}" class="boton boton-secundario" th:unless="${#strings.isEmpty(q)}">Ver todos</a>
+				<a th:href="@{/}" class="boton boton-principal">Nueva etiqueta</a>
+			</div>
+		</div>
+
+		<!-- Listado -->
+		<form id="formLista" class="tarjeta" method="post" th:action="@{/hoja/agregar}" th:if="${productos.totalElements > 0}">
+			<input type="hidden" name="q" th:value="${q}">
+			<input type="hidden" name="pagina" th:value="${productos.number}">
+
+			<div class="barra-tabla">
+				<label><input type="checkbox" id="marcarTodos"> Marcar todos</label>
+				<span class="resumen">
+					<span th:text="${productos.totalElements == 1} ? '1 producto' : ${#numbers.formatInteger(productos.totalElements, 1, 'POINT')} + ' productos'">0 productos</span>
+					<span th:if="${productos.totalPages > 1}" th:text="' · página ' + ${productos.number + 1} + ' de ' + ${productos.totalPages}"></span>
+				</span>
+				<button type="submit" class="boton boton-chico boton-principal" id="agregarMarcados" disabled>
+					<svg th:replace="~{fragments/layout :: icono-hoja}"></svg>
+					Agregar marcados a la hoja
+				</button>
+			</div>
+
+			<table class="tabla">
+				<thead>
+					<tr>
+						<th class="col-check"></th>
+						<th>Producto</th>
+						<th class="ocultar-movil">Código</th>
+						<th class="der">Precio</th>
+						<th class="centro ocultar-movil">Actualizado</th>
+						<th class="der">Acciones</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="p : ${productos.content}">
+						<td class="col-check"><input type="checkbox" name="ids" th:value="${p.idProducto}" aria-label="Marcar"></td>
+						<td class="col-nombre">
+							<span th:text="${p.nombre}">Producto</span>
+							<span class="chip" th:if="${p.enHoja}">En la hoja</span>
+						</td>
+						<td class="col-codigo ocultar-movil" th:text="${p.codigoBarras}"></td>
+						<td class="der col-precio" th:text="${p.precioTexto}"></td>
+						<td class="centro col-fecha ocultar-movil" th:text="${#temporals.format(p.fechaModificacion, 'dd/MM/yyyy')}"></td>
+						<td class="acciones">
+							<a class="accion principal" th:href="@{/imprimir/producto/{id}(id=${p.idProducto}, desde='productos')}">Imprimir</a>
+							<button type="submit" class="accion" th:formaction="@{/hoja/agregar/{id}(id=${p.idProducto})}"
+								th:disabled="${p.enHoja}" th:title="${p.enHoja} ? 'Ya está en la hoja' : 'Agregar a la hoja A4'">+ Hoja</button>
+							<a class="accion" th:href="@{/productos/editar/{id}(id=${p.idProducto})}">Editar</a>
+							<button type="submit" class="accion peligro" th:formaction="@{/productos/eliminar/{id}(id=${p.idProducto})}"
+								data-confirmar="¿Borrar este producto?">Borrar</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<nav th:replace="~{fragments/paginacion :: enlaces(${productos}, '/productos?q=' + ${#uris.escapeQueryParam(q)})}"></nav>
+		</form>
+
+	</main>
+
+	<footer th:replace="~{fragments/layout :: pie}"></footer>
+	<script th:src="@{/js/listado.js}"></script>
+</body>
+</html>

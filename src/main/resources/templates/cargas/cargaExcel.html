@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Carga Excel')}"></head>
+<body>
+
+	<header th:replace="~{fragments/layout :: encabezado('cargas')}"></header>
+	<div th:replace="~{fragments/layout :: mensajes}"></div>
+
+	<main class="contenedor">
+
+		<section class="titulo-pagina">
+			<h1>Carga desde Excel</h1>
+			<p>Subí un Excel y elegí: imprimir sus etiquetas o guardar los productos.</p>
+		</section>
+
+		<!-- Resultado cuando no se guardó nada (todo repetido o con errores) -->
+		<div th:replace="~{cargas/detalleCarga :: observaciones}"></div>
+
+		<div class="dos-columnas">
+
+			<!-- Subir archivo -->
+			<form class="tarjeta subir-excel" th:action="@{/cargas}" method="post" enctype="multipart/form-data" id="formExcel">
+				<div class="tarjeta-titulo">
+					<h2>Subir archivo</h2>
+					<span>.xlsx o .xls · hasta 10 MB</span>
+				</div>
+
+				<label class="zona-archivo" id="zonaArchivo" for="archivo">
+					<input type="file" id="archivo" name="archivo" accept=".xlsx,.xls,.xlsm,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel">
+					<svg th:replace="~{fragments/layout :: icono-excel}"></svg>
+					<strong id="nombreArchivo">Arrastrá el Excel acá</strong>
+					<span id="detalleArchivo">o hacé clic para elegirlo</span>
+				</label>
+
+				<div class="botones">
+					<button type="submit" name="accion" value="imprimir" class="boton boton-secundario" disabled>
+						<svg th:replace="~{fragments/layout :: icono-imprimir}"></svg>
+						<span>Solo imprimir</span>
+					</button>
+					<button type="submit" name="accion" value="guardar" class="boton boton-principal" disabled>
+						<svg th:replace="~{fragments/layout :: icono-subir}"></svg>
+						<span>Guardar productos</span>
+					</button>
+				</div>
+				<div class="explica-opciones">
+					<p><strong>Solo imprimir:</strong> imprime lo que trae el Excel. No guarda nada.</p>
+					<p><strong>Guardar productos:</strong> guarda los nuevos. Los que ya están cargados no se repiten.</p>
+				</div>
+			</form>
+
+			<!-- Cómo tiene que ser -->
+			<section class="tarjeta">
+				<div class="tarjeta-titulo">
+					<h2>¿Cómo tiene que ser el Excel?</h2>
+				</div>
+
+				<table class="planilla" aria-label="Ejemplo de Excel">
+					<thead>
+						<tr><th></th><th>A</th><th>B</th><th>C</th></tr>
+					</thead>
+					<tbody>
+						<tr class="titulos"><th>1</th><td>Nombre del producto</td><td>Precio</td><td>Código de barras</td></tr>
+						<tr><th>2</th><td>Yerba Mate Playadito 1 kg</td><td>4999</td><td>7790387000017</td></tr>
+						<tr><th>3</th><td>Aceite Natura 1,5 L</td><td>3849,90</td><td>7790060023455</td></tr>
+					</tbody>
+				</table>
+
+				<ul class="lista-ayuda">
+					<li>Primera fila con los títulos; un producto por fila.</li>
+					<li>El código de barras identifica a cada producto: no se cargan dos veces.</li>
+					<li>Lo guardado queda en el historial para volver a imprimir.</li>
+				</ul>
+
+				<a th:href="@{/cargas/plantilla}" class="boton boton-secundario boton-ancho">
+					<svg th:replace="~{fragments/layout :: icono-bajar}"></svg>
+					Descargar plantilla
+				</a>
+			</section>
+
+		</div>
+
+		<!-- Historial -->
+		<section class="seccion" th:if="${cargas.totalElements > 0}">
+			<h2 class="subtitulo">Cargas guardadas</h2>
+			<form class="tarjeta" method="post" id="formHistorial">
+				<table class="tabla">
+					<thead>
+						<tr>
+							<th>Fecha</th>
+							<th>Archivo</th>
+							<th class="centro">Guardados</th>
+							<th class="ocultar-movil">Resultado</th>
+							<th class="der">Acciones</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="c : ${cargas.content}">
+							<td class="col-fecha" th:text="${#temporals.format(c.fecha, 'dd/MM/yyyy HH:mm')}"></td>
+							<td class="col-nombre"><a class="enlace-limpio" th:href="@{/cargas/{id}(id=${c.idCarga})}" th:text="${c.nombreArchivo}">archivo.xlsx</a></td>
+							<td class="centro col-precio" th:text="${#numbers.formatInteger(c.cantidad, 1, 'POINT')}">0</td>
+							<td class="ocultar-movil resumen-carga">
+								<span class="estado nuevo" th:if="${c.nuevos > 0}" th:text="${c.nuevos} + ' nuevos'"></span>
+								<span class="estado igual" th:if="${c.yaEstaban > 0}" th:text="${c.yaEstaban} + ' ya estaban'"></span>
+								<span class="estado actualizado" th:if="${c.repetidos > 0}" th:text="${c.repetidos} + ' repetidos'"></span>
+								<span class="estado error" th:if="${c.conError > 0}" th:text="${c.conError} + ' con error'"></span>
+							</td>
+							<td class="acciones">
+								<a class="accion principal" th:href="@{/imprimir/carga/{id}(id=${c.idCarga})}">Imprimir</a>
+								<button type="submit" class="accion" th:formaction="@{/cargas/{id}/hoja(id=${c.idCarga})}">+ Hoja</button>
+								<a class="accion" th:href="@{/cargas/{id}(id=${c.idCarga})}">Ver</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<nav th:replace="~{fragments/paginacion :: enlaces(${cargas}, '/cargas')}"></nav>
+			</form>
+		</section>
+
+	</main>
+
+	<footer th:replace="~{fragments/layout :: pie}"></footer>
+	<script th:src="@{/js/carga.js}"></script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+	<!--
+		Paginación con enlaces. "base" es la dirección sin el número de página,
+		por ejemplo '/productos?q=yerba' o '/cargas/5'.
+		Muestra: ‹ Anterior  1 … 4 5 [6] 7 8 … 40  Siguiente ›
+	-->
+	<nav th:fragment="enlaces(pagina, base)" class="paginacion" th:if="${pagina.totalPages > 1}"
+		th:with="actual=${pagina.number}, total=${pagina.totalPages},
+				desde=${pagina.number > 2 ? pagina.number - 2 : 0},
+				hasta=${pagina.number + 2 < pagina.totalPages - 1 ? pagina.number + 2 : pagina.totalPages - 1}"
+		aria-label="Páginas">
+
+		<a th:if="${pagina.hasPrevious()}" class="paso" th:href="@{${base}(pagina=${actual - 1})}">‹ Anterior</a>
+		<span th:unless="${pagina.hasPrevious()}" class="paso apagado">‹ Anterior</span>
+
+		<span class="numeros">
+			<a th:if="${desde > 0}" th:href="@{${base}(pagina=0)}">1</a>
+			<span th:if="${desde > 1}" class="puntos">…</span>
+			<th:block th:each="n : ${#numbers.sequence(desde, hasta)}">
+				<span th:if="${n == actual}" class="actual" aria-current="page" th:text="${n + 1}">1</span>
+				<a th:unless="${n == actual}" th:href="@{${base}(pagina=${n})}" th:text="${n + 1}">2</a>
+			</th:block>
+			<span th:if="${hasta < total - 2}" class="puntos">…</span>
+			<a th:if="${hasta < total - 1}" th:href="@{${base}(pagina=${total - 1})}" th:text="${total}">9</a>
+		</span>
+
+		<a th:if="${pagina.hasNext()}" class="paso" th:href="@{${base}(pagina=${actual + 1})}">Siguiente ›</a>
+		<span th:unless="${pagina.hasNext()}" class="paso apagado">Siguiente ›</span>
+	</nav>
+
+	<!--
+		Paginación con botones, para formularios que guardan antes de cambiar de página
+		(hoja A4). Cada botón envía accion=pagina:N.
+	-->
+	<nav th:fragment="botones(pagina)" class="paginacion" th:if="${pagina.totalPages > 1}"
+		th:with="actual=${pagina.number}, total=${pagina.totalPages},
+				desde=${pagina.number > 2 ? pagina.number - 2 : 0},
+				hasta=${pagina.number + 2 < pagina.totalPages - 1 ? pagina.number + 2 : pagina.totalPages - 1}"
+		aria-label="Páginas">
+
+		<button type="submit" name="accion" class="paso" formnovalidate th:value="'pagina:' + ${actual - 1}"
+			th:disabled="${!pagina.hasPrevious()}">‹ Anterior</button>
+
+		<span class="numeros">
+			<button th:if="${desde > 0}" type="submit" name="accion" value="pagina:0" formnovalidate>1</button>
+			<span th:if="${desde > 1}" class="puntos">…</span>
+			<th:block th:each="n : ${#numbers.sequence(desde, hasta)}">
+				<span th:if="${n == actual}" class="actual" aria-current="page" th:text="${n + 1}">1</span>
+				<button th:unless="${n == actual}" type="submit" name="accion" formnovalidate
+					th:value="'pagina:' + ${n}" th:text="${n + 1}">2</button>
+			</th:block>
+			<span th:if="${hasta < total - 2}" class="puntos">…</span>
+			<button th:if="${hasta < total - 1}" type="submit" name="accion" formnovalidate
+				th:value="'pagina:' + ${total - 1}" th:text="${total}">9</button>
+		</span>
+
+		<button type="submit" name="accion" class="paso" formnovalidate th:value="'pagina:' + ${actual + 1}"
+			th:disabled="${!pagina.hasNext()}">Siguiente ›</button>
+	</nav>
+
+</body>
+</html>
