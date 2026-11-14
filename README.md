@@ -1,6 +1,13 @@
 # Etiquetas La Unión
 
-Sistema web (Spring Boot MVC + Thymeleaf + PostgreSQL) para imprimir carteles de precio de **13 × 8 cm** a color.
+Sistema web (Spring Boot MVC + Thymeleaf + PostgreSQL) para imprimir carteles de precio a color, en dos tamaños:
+
+| Tamaño | Hoja A4 | Por hoja |
+|---|---|---|
+| **13 × 8 cm** | horizontal | 4 (2 × 2) |
+| **8 × 4 cm** | vertical | 14 (2 × 7) |
+
+El tamaño se elige con el selector **13 × 8 cm / 8 × 4 cm** en *Nueva etiqueta*, *Hoja A4*, *Carga Excel* y en la barra de la vista de impresión. Cada compu recuerda el último que usó.
 
 ## Cómo se usa
 
