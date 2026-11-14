@@ -16,7 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import ar.com.launion.etiquetas.entity.Producto;
 import ar.com.launion.etiquetas.service.ProductoService;
-import ar.com.launion.etiquetas.util.Paginas;
+import ar.com.launion.etiquetas.util.FormatoEtiqueta;
 
 @Controller
 @RequestMapping("/hoja")
@@ -40,7 +40,6 @@ public class HojaController {
 		long etiquetas = productoService.contarEtiquetasEnHoja();
 		model.addAttribute("productos", productos);
 		model.addAttribute("totalEtiquetas", etiquetas);
-		model.addAttribute("totalHojas", (etiquetas + Paginas.ETIQUETAS_POR_HOJA - 1) / Paginas.ETIQUETAS_POR_HOJA);
 		return "hoja/hojaA4";
 	}
 
@@ -87,6 +86,7 @@ public class HojaController {
 			@RequestParam(name = "pagina", defaultValue = "0") int pagina,
 			@RequestParam(name = "porcentaje", defaultValue = "") String porcentaje,
 			@RequestParam(name = "redondeo", defaultValue = "1") int redondeo,
+			@RequestParam(name = "formato", required = false) String formato,
 			@RequestParam(name = "accion", defaultValue = "guardar") String accion,
 			RedirectAttributes redirect) {
 
@@ -124,7 +124,7 @@ public class HojaController {
 			return "redirect:/hoja";
 		}
 		if ("imprimir".equals(accion) && errores.isEmpty()) {
-			return "redirect:/imprimir/hoja";
+			return "redirect:/imprimir/hoja?formato=" + FormatoEtiqueta.de(formato).getClave();
 		}
 		if (errores.isEmpty()) {
 			redirect.addFlashAttribute("mensaje", "Precios guardados.");

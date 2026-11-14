@@ -25,7 +25,8 @@
 		return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 	}
 
-	// "N etiquetas · M hojas": total del servidor + lo que cambió en esta página
+	// "N etiquetas" y cuántas hojas salen con cada tamaño:
+	// total del servidor + lo que cambió en las copias de esta página
 	function actualizarResumen() {
 		if (!resumen) return;
 		var total = Number(resumen.dataset.total) || 0;
@@ -34,13 +35,13 @@
 			var ahora = Math.min(20, Math.max(1, parseInt(c.value, 10) || 1));
 			total += ahora - antes;
 		});
-		var hojas = Math.ceil(total / 4);
-		var fuertes = resumen.querySelectorAll('strong');
-		var textos = resumen.querySelectorAll('span');
-		fuertes[0].textContent = formatear(total);
-		textos[0].textContent = total === 1 ? 'etiqueta' : 'etiquetas';
-		fuertes[1].textContent = formatear(hojas);
-		textos[1].textContent = hojas === 1 ? 'hoja' : 'hojas';
+		resumen.querySelector('strong').textContent = formatear(total);
+		resumen.querySelector('span').textContent = total === 1 ? 'etiqueta para imprimir' : 'etiquetas para imprimir';
+		form.querySelectorAll('input[name="formato"]').forEach(function (radio) {
+			var hojas = Math.ceil(total / (Number(radio.dataset.porHoja) || 4));
+			var texto = radio.parentNode.querySelector('.hojas-formato');
+			if (texto) texto.textContent = '· ' + formatear(hojas) + (hojas === 1 ? ' hoja' : ' hojas');
+		});
 	}
 
 	precios.forEach(function (campo, i) {

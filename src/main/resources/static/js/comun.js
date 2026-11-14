@@ -5,3 +5,11 @@ document.addEventListener('click', function (e) {
 		e.preventDefault();
 	}
 });
+
+/* Tamaño de cartel (13 x 8 / 8 x 4): esta compu recuerda el último elegido */
+document.addEventListener('change', function (e) {
+	var radio = e.target;
+	if (radio.name === 'formato' && radio.type === 'radio' && radio.checked) {
+		document.cookie = 'formato=' + encodeURIComponent(radio.value) + '; path=/; max-age=31536000; SameSite=Lax';
+	}
+});

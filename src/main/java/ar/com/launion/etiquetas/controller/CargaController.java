@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +27,8 @@ import ar.com.launion.etiquetas.entity.Carga;
 import ar.com.launion.etiquetas.entity.Producto;
 import ar.com.launion.etiquetas.service.CargaService;
 import ar.com.launion.etiquetas.service.ProductoService;
-import ar.com.launion.etiquetas.util.Paginas;
+import ar.com.launion.etiquetas.util.FormatoEtiqueta;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Carga por Excel con dos opciones:
@@ -59,7 +61,9 @@ public class CargaController {
 	@PostMapping
 	public String subir(@RequestParam(name = "archivo", required = false) MultipartFile archivo,
 			@RequestParam(name = "accion", defaultValue = "guardar") String accion,
-			Model model, RedirectAttributes redirect) {
+			@RequestParam(name = "formato", required = false) String formato,
+			@CookieValue(name = FormatoEtiqueta.COOKIE, required = false) String ultimo,
+			Model model, HttpServletResponse response, RedirectAttributes redirect) {
 
 		String problema = revisarArchivo(archivo);
 		if (problema != null) {
@@ -69,7 +73,7 @@ public class CargaController {
 
 		try (InputStream contenido = archivo.getInputStream()) {
 			return "imprimir".equals(accion)
-					? soloImprimir(contenido, model, redirect)
+					? soloImprimir(contenido, ImpresionController.elegir(formato, ultimo, response), model, redirect)
 					: guardar(archivo.getOriginalFilename(), contenido, redirect);
 		} catch (IllegalArgumentException e) {
 			redirect.addFlashAttribute("error", e.getMessage());
@@ -81,7 +85,7 @@ public class CargaController {
 	}
 
 	// Opción "Solo imprimir": muestra la vista de impresión con lo que trae el Excel, sin guardar
-	private String soloImprimir(InputStream contenido, Model model, RedirectAttributes redirect) {
+	private String soloImprimir(InputStream contenido, FormatoEtiqueta formato, Model model, RedirectAttributes redirect) {
 		LecturaExcel lectura = cargaService.leerParaImprimir(contenido);
 		if (lectura.getEtiquetas().isEmpty()) {
 			redirect.addFlashAttribute("error", "Ninguna fila del Excel se puede imprimir. Revisá las filas marcadas.");
@@ -89,9 +93,8 @@ public class CargaController {
 			redirect.addFlashAttribute("conError", lectura.getConError());
 			return "redirect:/cargas";
 		}
-		model.addAttribute("paginas", Paginas.dividir(lectura.getEtiquetas(), Paginas.ETIQUETAS_POR_HOJA));
-		model.addAttribute("totalEtiquetas", lectura.getEtiquetas().size());
-		model.addAttribute("origen", "excel");
+		// Sin selector de tamaño en la vista: el archivo no queda guardado (el tamaño se eligió al subirlo)
+		ImpresionController.preparar(model, lectura.getEtiquetas(), formato, "excel", null);
 		model.addAttribute("volver", "/cargas");
 		model.addAttribute("textoVolver", "Carga Excel");
 		model.addAttribute("filasConError", lectura.getFilasConError());

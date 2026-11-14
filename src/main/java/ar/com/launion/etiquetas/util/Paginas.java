@@ -11,9 +11,6 @@ public final class Paginas {
 	/** Filas por página en todas las listas (productos, hoja A4, cargas). */
 	public static final int TAMANIO = 15;
 
-	/** Etiquetas de 13 x 8 cm que entran en una hoja A4 horizontal. */
-	public static final int ETIQUETAS_POR_HOJA = 4;
-
 	private Paginas() {
 	}
 

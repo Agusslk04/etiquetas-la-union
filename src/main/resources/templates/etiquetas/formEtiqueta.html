@@ -68,11 +68,19 @@
 			<section class="tarjeta vista-previa">
 				<div class="tarjeta-titulo">
 					<h2>Vista previa</h2>
-					<span>Tamaño real: <strong>13 × 8 cm</strong></span>
+					<!-- Tamaño del cartel: viaja con el formulario (atributo form) -->
+					<div class="selector-formato" role="radiogroup" aria-label="Tamaño del cartel">
+						<label th:each="f : ${formatos}">
+							<input type="radio" name="formato" form="formEtiqueta" th:value="${f.clave}" th:checked="${f == formato}">
+							<span th:text="${f.medida}">13 × 8 cm</span>
+						</label>
+					</div>
 				</div>
 				<div class="zona-previa">
-					<div class="marco-etiqueta" data-escala>
-						<article th:replace="~{fragments/etiqueta :: etiqueta(${form.nombre}, ${form.precioEntero}, ${form.precioCentavos}, ${form.codigoBarras}, ${hoy})}"></article>
+					<div class="marco-etiqueta" data-escala data-escala-mm="130">
+						<div class="previa-formato" th:each="f : ${formatos}" th:data-formato="${f.clave}" th:hidden="${f != formato}">
+							<article th:replace="~{fragments/etiqueta :: etiqueta(${form.nombre}, ${form.precioEntero}, ${form.precioCentavos}, ${form.codigoBarras}, ${hoy}, ${f.clave})}"></article>
+						</div>
 					</div>
 				</div>
 				<p class="nota">Todo lo que imprimís queda guardado en <a th:href="@{/productos}">Productos</a>.</p>

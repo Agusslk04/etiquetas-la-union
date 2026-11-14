@@ -28,13 +28,20 @@
 		interno.style.fontSize = bajo + 'mm';
 	}
 
+	// Tamaños de letra máximo y mínimo (mm) de cada formato
+	var MEDIDAS = {
+		grande: { nombre: [7.4, 3.2], precio: [26, 8], codigo: [2.5, 1.4] },
+		chica: { nombre: [4.2, 2], precio: [13.6, 5], codigo: [1.75, 1] }
+	};
+
 	function ajustarEtiqueta(et) {
+		var m = et.classList.contains('etiqueta-chica') ? MEDIDAS.chica : MEDIDAS.grande;
 		var nombre = et.querySelector('.et-nombre');
-		ajustar(nombre, nombre && nombre.firstElementChild, 8.6, 3.4);
+		ajustar(nombre, nombre && nombre.firstElementChild, m.nombre[0], m.nombre[1]);
 		var precio = et.querySelector('.et-precio');
-		ajustar(precio, precio && precio.firstElementChild, 19, 7);
+		ajustar(precio, precio && precio.firstElementChild, m.precio[0], m.precio[1]);
 		var codigo = et.querySelector('.et-codigo');
-		ajustar(codigo, codigo && codigo.querySelector('span'), 2.5, 1.4);
+		ajustar(codigo, codigo && codigo.querySelector('span'), m.codigo[0], m.codigo[1]);
 	}
 
 	function ajustarTodas() {
@@ -43,13 +50,19 @@
 
 	// ---------- Escala de la vista previa (sin deformar) ----------
 
+	// data-escala-mm="130": todas las etiquetas del marco usan la misma escala (la de 13 cm),
+	// así la de 8 x 4 se ve más chica, como sale impresa. Se muestra la que no está oculta.
+	var MM = 96 / 25.4;
+
 	function escalar() {
 		document.querySelectorAll('[data-escala]').forEach(function (marco) {
-			var hijo = marco.firstElementChild;
+			var hijo = Array.prototype.find.call(marco.querySelectorAll('.etiqueta'), function (e) { return e.offsetWidth > 0; });
 			if (!hijo || !hijo.offsetWidth) return;
-			var s = marco.clientWidth / hijo.offsetWidth;
+			var referencia = Number(marco.dataset.escalaMm) * MM || hijo.offsetWidth;
+			var s = marco.clientWidth / referencia;
 			marco.style.setProperty('--escala', s);
 			marco.style.height = (hijo.offsetHeight * s) + 'px';
+			hijo.style.left = ((marco.clientWidth - hijo.offsetWidth * s) / 2) + 'px';
 		});
 	}
 

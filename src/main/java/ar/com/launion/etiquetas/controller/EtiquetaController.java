@@ -17,6 +17,7 @@ import ar.com.launion.etiquetas.dto.EtiquetaForm;
 import ar.com.launion.etiquetas.entity.Producto;
 import ar.com.launion.etiquetas.service.CodigoBarrasService;
 import ar.com.launion.etiquetas.service.ProductoService;
+import ar.com.launion.etiquetas.util.FormatoEtiqueta;
 import ar.com.launion.etiquetas.util.Precio;
 
 @Controller
@@ -53,6 +54,7 @@ public class EtiquetaController {
 	@PostMapping("/etiquetas/guardar")
 	public String guardar(@ModelAttribute("form") EtiquetaForm form, BindingResult result,
 			@RequestParam(name = "accion", defaultValue = "imprimir") String accion,
+			@RequestParam(name = "formato", required = false) String formato,
 			RedirectAttributes redirect) {
 
 		validar(form, result);
@@ -77,7 +79,8 @@ public class EtiquetaController {
 			redirect.addFlashAttribute("mensaje", "«" + producto.getNombre() + "» se guardó.");
 			return "redirect:/productos";
 		default:
-			return "redirect:/imprimir/producto/" + producto.getIdProducto();
+			// El tamaño elegido en el panel (13 x 8 o 8 x 4)
+			return "redirect:/imprimir/producto/" + producto.getIdProducto() + "?formato=" + FormatoEtiqueta.de(formato).getClave();
 		}
 	}
 

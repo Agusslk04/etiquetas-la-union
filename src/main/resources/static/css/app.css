@@ -344,7 +344,7 @@ a { color: var(--naranja-osc); }
 	width: 100%;
 }
 
-.marco-etiqueta > .etiqueta {
+.marco-etiqueta .etiqueta {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -359,6 +359,74 @@ a { color: var(--naranja-osc); }
 	text-align: center;
 	color: var(--suave);
 	font-size: .9rem;
+}
+
+/* ===== Selector de tamaño: [ 13 × 8 cm | 8 × 4 cm ] ===== */
+
+.selector-formato {
+	display: inline-flex;
+	gap: 4px;
+	padding: 4px;
+	border-radius: 12px;
+	background: #F4EFE8;
+}
+
+.selector-formato label,
+.selector-formato a {
+	position: relative;
+	display: block;
+	cursor: pointer;
+	text-decoration: none;
+}
+
+.selector-formato input {
+	position: absolute;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.selector-formato span,
+.selector-formato a {
+	display: block;
+	padding: 8px 16px;
+	border-radius: 9px;
+	color: var(--suave);
+	font-size: .9rem;
+	font-weight: 600;
+	white-space: nowrap;
+	transition: background .15s, color .15s, box-shadow .15s;
+}
+
+.selector-formato label:hover span,
+.selector-formato a:hover { color: var(--azul); }
+
+.selector-formato input:checked + span,
+.selector-formato a.activo {
+	background: #fff;
+	color: var(--naranja-osc);
+	box-shadow: 0 1px 4px rgba(39, 49, 114, .14);
+}
+
+.selector-formato input:focus-visible + span { outline: 3px solid rgba(237, 103, 43, .35); }
+
+.selector-formato small {
+	margin-left: 6px;
+	color: var(--suave);
+	font-weight: 500;
+}
+
+.elegir-tamanio {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
+	gap: 12px;
+	margin-bottom: 18px;
+}
+
+.elegir-tamanio > span {
+	color: var(--azul);
+	font-weight: 600;
 }
 
 /* ===== Mensajes ===== */

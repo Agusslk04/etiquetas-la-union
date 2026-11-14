@@ -15,33 +15,38 @@
 	var botonImprimir = document.getElementById('botonImprimir');
 	var idActual = (form.querySelector('[name="idProducto"]') || {}).value || '';
 
-	var etiqueta = document.querySelector('.vista-previa .etiqueta');
-	var outNombre = etiqueta.querySelector('.et-nombre span');
-	var outEntero = etiqueta.querySelector('.et-entero');
-	var outCentavos = etiqueta.querySelector('.et-centavos');
-	var cajaCodigo = etiqueta.querySelector('.et-codigo');
-	var outImagen = cajaCodigo.querySelector('img');
-	var outNumero = cajaCodigo.querySelector('span');
+	// Hay una vista previa por tamaño (13 x 8 y 8 x 4): se actualizan las dos
+	var etiquetas = Array.prototype.slice.call(document.querySelectorAll('.vista-previa .etiqueta'));
+	var previas = Array.prototype.slice.call(document.querySelectorAll('.vista-previa .previa-formato'));
+	var radiosFormato = Array.prototype.slice.call(document.querySelectorAll('input[name="formato"][form="formEtiqueta"]'));
 
 	var CODIGO_VALIDO = /^[0-9A-Za-z.\-]{1,40}$/;
 
+	function cada(selector, accion) {
+		etiquetas.forEach(function (et) { accion(et.querySelector(selector), et); });
+	}
+
 	function ajustar() {
-		Etiquetas.ajustarEtiqueta(etiqueta);
+		etiquetas.forEach(function (et) { if (et.offsetWidth) Etiquetas.ajustarEtiqueta(et); });
 	}
 
 	function pintarNombre() {
 		var v = nombre.value.trim();
-		outNombre.textContent = v || 'Nombre del producto';
-		outNombre.classList.toggle('et-vacio', !v);
+		cada('.et-nombre span', function (el) {
+			el.textContent = v || 'Nombre del producto';
+			el.classList.toggle('et-vacio', !v);
+		});
 		ajustar();
 	}
 
 	function pintarPrecio() {
 		var n = Etiquetas.parsearPrecio(precio.value);
 		var partes = Etiquetas.partesPrecio(n || 0);
-		outEntero.textContent = partes.entero;
-		outCentavos.textContent = partes.centavos;
-		outCentavos.classList.toggle('vacio', !partes.centavos);
+		cada('.et-entero', function (el) { el.textContent = partes.entero; });
+		cada('.et-centavos', function (el) {
+			el.textContent = partes.centavos;
+			el.classList.toggle('vacio', !partes.centavos);
+		});
 		ajustar();
 	}
 
@@ -51,12 +56,25 @@
 		esperaCodigo = setTimeout(function () {
 			var v = codigo.value.trim();
 			var valido = CODIGO_VALIDO.test(v);
-			cajaCodigo.classList.toggle('et-vacio', !valido);
-			outImagen.src = form.dataset.urlCodigo + '?valor=' + encodeURIComponent(valido ? v : '0000000000000');
-			outNumero.textContent = valido ? v : 'Código de barras';
+			var src = form.dataset.urlCodigo + '?valor=' + encodeURIComponent(valido ? v : '0000000000000');
+			cada('.et-codigo', function (caja) {
+				caja.classList.toggle('et-vacio', !valido);
+				var img = caja.querySelector('img');
+				if (img.getAttribute('src') !== src) img.src = src;
+				caja.querySelector('span').textContent = valido ? v : 'Código de barras';
+			});
 			ajustar();
 		}, 150);
 	}
+
+	// Cambiar entre 13 x 8 y 8 x 4: muestra la vista previa elegida
+	function mostrarFormato() {
+		var elegido = (radiosFormato.filter(function (r) { return r.checked; })[0] || {}).value || 'grande';
+		previas.forEach(function (p) { p.hidden = p.dataset.formato !== elegido; });
+		ajustar();
+		Etiquetas.escalar();
+	}
+	radiosFormato.forEach(function (r) { r.addEventListener('change', mostrarFormato); });
 
 	function mostrarAviso(texto, tipo) {
 		if (!aviso) return;
@@ -127,6 +145,7 @@
 
 	// Al volver con "atrás" el navegador puede restaurar los valores: repintar
 	window.addEventListener('pageshow', function () {
+		mostrarFormato();
 		pintarNombre();
 		pintarPrecio();
 		pintarCodigo();

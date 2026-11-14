@@ -48,10 +48,10 @@
 /* Nombre del producto */
 .et-nombre {
 	position: absolute;
-	top: 19.4mm;
+	top: 18.4mm;
 	left: 7mm;
 	right: 7mm;
-	height: 15.6mm;
+	height: 12.6mm;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -62,7 +62,7 @@
 	display: block;
 	width: 100%;
 	font-weight: 800;
-	font-size: 8.6mm;
+	font-size: 7.4mm;
 	line-height: 1.06;
 	letter-spacing: -0.01em;
 	text-transform: uppercase;
@@ -71,37 +71,33 @@
 
 .et-nombre span.et-vacio { opacity: .28; }
 
-/* Precio: píldora naranja */
+/* Precio: negro y grande, ocupa casi todo el ancho */
 .et-precio {
 	position: absolute;
-	top: 37mm;
-	left: 9mm;
-	right: 9mm;
-	height: 22.6mm;
-	padding: 0 7mm;
-	border-radius: 11.3mm;
-	background: linear-gradient(180deg, #F47E35 0%, #EC6328 55%, #E4561F 100%);
-	box-shadow: 0 0.8mm 0 #C84A19;
+	top: 31mm;
+	left: 5mm;
+	right: 5mm;
+	height: 31mm;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	color: #fff;
+	color: #111111;
 }
 
 .et-precio-valor {
 	display: inline-flex;
 	align-items: flex-start;
 	white-space: nowrap;
-	font-weight: 800;
-	font-size: 19mm;
+	font-weight: 900;
+	font-size: 26mm;
 	line-height: 1;
-	letter-spacing: -0.02em;
+	letter-spacing: -0.03em;
 }
 
 .et-signo {
 	font-size: .46em;
-	font-weight: 700;
-	margin: .2em .14em 0 0;
+	font-weight: 800;
+	margin: .2em .07em 0 0;
 }
 
 .et-centavos {
@@ -180,3 +176,79 @@
 
 .et-codigo.et-vacio img { opacity: .14; }
 .et-codigo.et-vacio span { opacity: .45; letter-spacing: .1mm; }
+
+/* =========================================================
+   Cartelito chico · 8 x 4 cm (mismo diseño, todo más compacto)
+   ========================================================= */
+
+.etiqueta.etiqueta-chica {
+	width: 80mm;
+	height: 40mm;
+}
+
+.etiqueta-chica .et-logo {
+	top: 2.2mm;
+	height: 6.4mm;
+}
+
+.etiqueta-chica .et-nombre {
+	top: 9.3mm;
+	left: 3mm;
+	right: 3mm;
+	height: 6.4mm;
+}
+
+.etiqueta-chica .et-nombre span {
+	font-size: 4.2mm;
+	line-height: 1.04;
+}
+
+.etiqueta-chica .et-precio {
+	top: 15.6mm;
+	left: 3mm;
+	right: 3mm;
+	height: 13.6mm;
+}
+
+.etiqueta-chica .et-precio-valor { font-size: 13.6mm; }
+
+.etiqueta-chica .et-codigo {
+	bottom: 1.2mm;
+	width: 34mm;
+	height: 9.2mm;
+	padding: .7mm 1.5mm .6mm;
+	border-width: .35mm;
+	border-radius: 1.6mm;
+}
+
+/* 27 mm de barras: deja ~3 mm de blanco a cada lado para el lector */
+.etiqueta-chica .et-codigo img {
+	width: 27mm;
+	height: 4.9mm;
+}
+
+.etiqueta-chica .et-codigo span {
+	margin-top: .5mm;
+	font-size: 1.75mm;
+	letter-spacing: .25mm;
+}
+
+.etiqueta-chica .et-lado {
+	bottom: 1.5mm;
+	width: 20.5mm;
+	line-height: 1.05;
+}
+
+.etiqueta-chica .et-lado.izq { left: 1mm; }
+.etiqueta-chica .et-lado.der { right: 1mm; }
+
+.etiqueta-chica .et-lado small {
+	margin-bottom: .35mm;
+	font-size: 1.3mm;
+	letter-spacing: .15mm;
+}
+
+.etiqueta-chica .et-lado strong {
+	font-size: 2.3mm;
+	letter-spacing: 0;
+}
