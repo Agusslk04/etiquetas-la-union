@@ -10,7 +10,7 @@
 
 		<section class="titulo-pagina">
 			<h1>Hoja A4</h1>
-			<p th:if="${productos.totalElements == 0}">4 carteles de 13 × 8 cm o 14 de 8 × 4 cm por hoja.</p>
+			<p th:if="${productos.totalElements == 0}">Etiquetas de 13 × 8, 9 × 5 u 8 × 4 cm, o carteles A4 y media A4.</p>
 			<p th:unless="${productos.totalElements == 0}" id="resumenHoja" th:attr="data-total=${totalEtiquetas}">
 				<strong th:text="${#numbers.formatInteger(totalEtiquetas, 1, 'POINT')}">0</strong>
 				<span th:text="${totalEtiquetas == 1} ? 'etiqueta para imprimir' : 'etiquetas para imprimir'">etiquetas para imprimir</span>
@@ -92,16 +92,9 @@
 			<nav th:replace="~{fragments/paginacion :: botones(${productos})}"></nav>
 
 			<div class="pie-hoja">
-				<!-- Tamaño del cartel, con cuántas hojas A4 salen de cada uno -->
+				<!-- Tamaño, con cuántas hojas A4 salen de cada uno -->
 				<div class="elegir-tamanio">
-					<span>Tamaño</span>
-					<div class="selector-formato" role="radiogroup" aria-label="Tamaño del cartel">
-						<label th:each="f : ${formatos}">
-							<input type="radio" name="formato" th:value="${f.clave}" th:checked="${f == formato}" th:data-por-hoja="${f.porHoja}">
-							<span>[[${f.medida}]]<small class="hojas-formato"
-								th:text="'· ' + ${#numbers.formatInteger(f.hojasPara(totalEtiquetas), 1, 'POINT')} + (${f.hojasPara(totalEtiquetas) == 1} ? ' hoja' : ' hojas')">· 1 hoja</small></span>
-						</label>
-					</div>
+					<div th:replace="~{fragments/formato :: radios(null, ${totalEtiquetas})}"></div>
 				</div>
 				<div class="botones">
 					<button type="submit" name="accion" value="guardar" class="boton boton-secundario">

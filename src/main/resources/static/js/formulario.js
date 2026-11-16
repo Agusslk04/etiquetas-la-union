@@ -15,15 +15,19 @@
 	var botonImprimir = document.getElementById('botonImprimir');
 	var idActual = (form.querySelector('[name="idProducto"]') || {}).value || '';
 
-	// Hay una vista previa por tamaño (13 x 8 y 8 x 4): se actualizan las dos
+	// Hay una vista previa por tamaño (etiquetas y carteles): se actualizan todas
 	var etiquetas = Array.prototype.slice.call(document.querySelectorAll('.vista-previa .etiqueta'));
 	var previas = Array.prototype.slice.call(document.querySelectorAll('.vista-previa .previa-formato'));
 	var radiosFormato = Array.prototype.slice.call(document.querySelectorAll('input[name="formato"][form="formEtiqueta"]'));
 
 	var CODIGO_VALIDO = /^[0-9A-Za-z.\-]{1,40}$/;
 
+	// Los carteles no llevan código de barras: solo se toca lo que cada uno tiene
 	function cada(selector, accion) {
-		etiquetas.forEach(function (et) { accion(et.querySelector(selector), et); });
+		etiquetas.forEach(function (et) {
+			var el = et.querySelector(selector);
+			if (el) accion(el, et);
+		});
 	}
 
 	function ajustar() {
@@ -67,7 +71,7 @@
 		}, 150);
 	}
 
-	// Cambiar entre 13 x 8 y 8 x 4: muestra la vista previa elegida
+	// Cambiar de tamaño: muestra la vista previa elegida
 	function mostrarFormato() {
 		var elegido = (radiosFormato.filter(function (r) { return r.checked; })[0] || {}).value || 'grande';
 		previas.forEach(function (p) { p.hidden = p.dataset.formato !== elegido; });

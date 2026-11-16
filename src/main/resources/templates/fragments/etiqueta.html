@@ -3,105 +3,162 @@
 <body>
 
 	<!--
-		Etiqueta de precio. formato = 'grande' (13 x 8 cm) o 'chica' (8 x 4 cm).
+		Etiqueta o cartel de precio. formato = un FormatoEtiqueta:
+		  - etiquetas 13 x 8, 9 x 5 y 8 x 4 cm (fondo naranja, código de barras y fecha)
+		  - carteles A4 y media A4 (fondo de los Word de La Unión, precio en el recuadro amarillo)
 		Se usa igual en la vista previa del panel y en las hojas A4 que se imprimen.
 	-->
 	<article th:fragment="etiqueta(nombre, entero, centavos, codigo, fecha, formato)" class="etiqueta"
-		th:classappend="${formato == 'chica'} ? 'etiqueta-chica' : 'etiqueta-grande'">
+		th:classappend="${formato.clases}" th:data-formato="${formato.clave}">
 
-		<!-- Fondo 13 x 8 -->
-		<svg th:unless="${formato == 'chica'}" class="et-fondo" viewBox="0 0 130 80" preserveAspectRatio="none" aria-hidden="true">
-			<defs>
-				<linearGradient id="etGradMancha" x1="0" y1="0" x2="1" y2="1">
-					<stop offset="0" stop-color="#FBD490" />
-					<stop offset="1" stop-color="#F7A64A" />
-				</linearGradient>
-				<linearGradient id="etGradOlaFondo" x1="0" y1="0" x2="1" y2="0">
-					<stop offset="0" stop-color="#FAB43C" />
-					<stop offset=".5" stop-color="#F59B2E" />
-					<stop offset="1" stop-color="#FAB43C" />
-				</linearGradient>
-				<linearGradient id="etGradOla" x1="0" y1="0" x2="0" y2="1">
-					<stop offset="0" stop-color="#F27832" />
-					<stop offset="1" stop-color="#E4531D" />
-				</linearGradient>
-			</defs>
+		<!-- ===== Carteles ===== -->
+		<th:block th:if="${formato.cartel}">
+			<img class="cartel-fondo" th:src="@{${formato.fondo}}" alt="">
 
-			<!-- Manchas en las esquinas superiores (espejadas) -->
-			<path d="M0 0H27C23 7.5 13.5 13 0 15.5Z" fill="url(#etGradMancha)" />
-			<path d="M130 0H103C107 7.5 116.5 13 130 15.5Z" fill="url(#etGradMancha)" />
-
-			<!-- Ola inferior en dos tonos (simétrica) -->
-			<path d="M0 62.5C21 57.5 43 67 65 67S109 57.5 130 62.5V80H0Z" fill="url(#etGradOlaFondo)" />
-			<path d="M0 67C21 62.5 43 71.5 65 71.5S109 62.5 130 67V80H0Z" fill="url(#etGradOla)" />
-
-			<!-- Destellos a los lados del logo -->
-			<g fill="none" stroke="#ED672B" stroke-width="1.1" stroke-linecap="round">
-				<path d="M35 6.2 37.8 8.6M34 10.6H37.8M35 15 37.8 12.6" />
-				<path d="M95 6.2 92.2 8.6M96 10.6H92.2M95 15 92.2 12.6" />
-			</g>
-		</svg>
-
-		<!-- Fondo 8 x 4 (mismo diseño, dibujado a su medida) -->
-		<svg th:if="${formato == 'chica'}" class="et-fondo" viewBox="0 0 80 40" preserveAspectRatio="none" aria-hidden="true">
-			<defs>
-				<linearGradient id="etChGradMancha" x1="0" y1="0" x2="1" y2="1">
-					<stop offset="0" stop-color="#FBD490" />
-					<stop offset="1" stop-color="#F7A64A" />
-				</linearGradient>
-				<linearGradient id="etChGradOlaFondo" x1="0" y1="0" x2="1" y2="0">
-					<stop offset="0" stop-color="#FAB43C" />
-					<stop offset=".5" stop-color="#F59B2E" />
-					<stop offset="1" stop-color="#FAB43C" />
-				</linearGradient>
-				<linearGradient id="etChGradOla" x1="0" y1="0" x2="0" y2="1">
-					<stop offset="0" stop-color="#F27832" />
-					<stop offset="1" stop-color="#E4531D" />
-				</linearGradient>
-			</defs>
-
-			<path d="M0 0H15C13 4 7.5 7 0 8.5Z" fill="url(#etChGradMancha)" />
-			<path d="M80 0H65C67 4 72.5 7 80 8.5Z" fill="url(#etChGradMancha)" />
-
-			<path d="M0 30.6C13 27.8 26 33.2 40 33.2S67 27.8 80 30.6V40H0Z" fill="url(#etChGradOlaFondo)" />
-			<path d="M0 33.2C13 30.8 26 35.6 40 35.6S67 30.8 80 33.2V40H0Z" fill="url(#etChGradOla)" />
-
-			<g fill="none" stroke="#ED672B" stroke-width=".7" stroke-linecap="round">
-				<path d="M24 3.3 25.8 4.7M23.3 5.4H25.8M24 7.5 25.8 6.1" />
-				<path d="M56 3.3 54.2 4.7M56.7 5.4H54.2M56 7.5 54.2 6.1" />
-			</g>
-		</svg>
-
-		<img class="et-logo" th:src="@{/img/logo-la-union.png}" alt="La Unión Supermercado">
-
-		<div class="et-nombre">
-			<span th:text="${#strings.isEmpty(nombre)} ? 'Nombre del producto' : ${nombre}"
-				th:classappend="${#strings.isEmpty(nombre)} ? 'et-vacio'">Nombre del producto</span>
-		</div>
-
-		<div class="et-precio">
-			<div class="et-precio-valor">
-				<span class="et-signo">$</span>
-				<span class="et-entero" th:text="${entero}">0</span>
-				<span class="et-centavos" th:text="${centavos}"
-					th:classappend="${#strings.isEmpty(centavos)} ? 'vacio'"></span>
+			<div class="et-nombre">
+				<span th:text="${#strings.isEmpty(nombre)} ? 'Nombre del producto' : ${nombre}"
+					th:classappend="${#strings.isEmpty(nombre)} ? 'et-vacio'">Nombre del producto</span>
 			</div>
-		</div>
 
-		<div class="et-lado izq">
-			<small>Fecha</small>
-			<strong th:text="${fecha}">01/01/2026</strong>
-		</div>
+			<div class="et-precio">
+				<div class="et-precio-valor">
+					<span class="et-signo">$</span>
+					<span class="et-entero" th:text="${entero}">0</span>
+					<span class="et-centavos" th:text="${centavos}"
+						th:classappend="${#strings.isEmpty(centavos)} ? 'vacio'"></span>
+				</div>
+			</div>
 
-		<div class="et-codigo" th:classappend="${#strings.isEmpty(codigo)} ? 'et-vacio'">
-			<img th:src="@{/codigo-barras(valor=${#strings.isEmpty(codigo)} ? '0000000000000' : ${codigo})}" alt="">
-			<span th:text="${#strings.isEmpty(codigo)} ? 'Código de barras' : ${codigo}">Código de barras</span>
-		</div>
+			<div class="cartel-fecha" th:text="${fecha}">01/01/2026</div>
+		</th:block>
 
-		<div class="et-lado der">
-			<small>IVA incluido</small>
-			<strong>Precio final</strong>
-		</div>
+		<!-- ===== Etiquetas ===== -->
+		<th:block th:unless="${formato.cartel}">
+
+			<!-- Fondo 13 x 8 -->
+			<svg th:if="${formato.clave == 'grande'}" class="et-fondo" viewBox="0 0 130 80" preserveAspectRatio="none" aria-hidden="true">
+				<defs>
+					<linearGradient id="etGradMancha" x1="0" y1="0" x2="1" y2="1">
+						<stop offset="0" stop-color="#FBD490" />
+						<stop offset="1" stop-color="#F7A64A" />
+					</linearGradient>
+					<linearGradient id="etGradOlaFondo" x1="0" y1="0" x2="1" y2="0">
+						<stop offset="0" stop-color="#FAB43C" />
+						<stop offset=".5" stop-color="#F59B2E" />
+						<stop offset="1" stop-color="#FAB43C" />
+					</linearGradient>
+					<linearGradient id="etGradOla" x1="0" y1="0" x2="0" y2="1">
+						<stop offset="0" stop-color="#F27832" />
+						<stop offset="1" stop-color="#E4531D" />
+					</linearGradient>
+				</defs>
+
+				<!-- Manchas en las esquinas superiores (espejadas) -->
+				<path d="M0 0H27C23 7.5 13.5 13 0 15.5Z" fill="url(#etGradMancha)" />
+				<path d="M130 0H103C107 7.5 116.5 13 130 15.5Z" fill="url(#etGradMancha)" />
+
+				<!-- Ola inferior en dos tonos (simétrica) -->
+				<path d="M0 62.5C21 57.5 43 67 65 67S109 57.5 130 62.5V80H0Z" fill="url(#etGradOlaFondo)" />
+				<path d="M0 67C21 62.5 43 71.5 65 71.5S109 62.5 130 67V80H0Z" fill="url(#etGradOla)" />
+
+				<!-- Destellos a los lados del logo -->
+				<g fill="none" stroke="#ED672B" stroke-width="1.1" stroke-linecap="round">
+					<path d="M35 6.2 37.8 8.6M34 10.6H37.8M35 15 37.8 12.6" />
+					<path d="M95 6.2 92.2 8.6M96 10.6H92.2M95 15 92.2 12.6" />
+				</g>
+			</svg>
+
+			<!-- Fondo 9 x 5 (mismo diseño, dibujado a su medida) -->
+			<svg th:if="${formato.clave == 'mini'}" class="et-fondo" viewBox="0 0 90 50" preserveAspectRatio="none" aria-hidden="true">
+				<defs>
+					<linearGradient id="etMiGradMancha" x1="0" y1="0" x2="1" y2="1">
+						<stop offset="0" stop-color="#FBD490" />
+						<stop offset="1" stop-color="#F7A64A" />
+					</linearGradient>
+					<linearGradient id="etMiGradOlaFondo" x1="0" y1="0" x2="1" y2="0">
+						<stop offset="0" stop-color="#FAB43C" />
+						<stop offset=".5" stop-color="#F59B2E" />
+						<stop offset="1" stop-color="#FAB43C" />
+					</linearGradient>
+					<linearGradient id="etMiGradOla" x1="0" y1="0" x2="0" y2="1">
+						<stop offset="0" stop-color="#F27832" />
+						<stop offset="1" stop-color="#E4531D" />
+					</linearGradient>
+				</defs>
+
+				<path d="M0 0H18.7C15.9 4.7 9.3 8.1 0 9.7Z" fill="url(#etMiGradMancha)" />
+				<path d="M90 0H71.3C74.1 4.7 80.7 8.1 90 9.7Z" fill="url(#etMiGradMancha)" />
+
+				<path d="M0 39.1C14.5 35.9 29.8 41.9 45 41.9S75.5 35.9 90 39.1V50H0Z" fill="url(#etMiGradOlaFondo)" />
+				<path d="M0 41.9C14.5 39.1 29.8 44.7 45 44.7S75.5 39.1 90 41.9V50H0Z" fill="url(#etMiGradOla)" />
+
+				<g fill="none" stroke="#ED672B" stroke-width=".8" stroke-linecap="round">
+					<path d="M26.2 3.8 28 5.3M25.6 6.6H28M26.2 9.4 28 7.9" />
+					<path d="M63.8 3.8 62 5.3M64.4 6.6H62M63.8 9.4 62 7.9" />
+				</g>
+			</svg>
+
+			<!-- Fondo 8 x 4 (mismo diseño, dibujado a su medida) -->
+			<svg th:if="${formato.clave == 'chica'}" class="et-fondo" viewBox="0 0 80 40" preserveAspectRatio="none" aria-hidden="true">
+				<defs>
+					<linearGradient id="etChGradMancha" x1="0" y1="0" x2="1" y2="1">
+						<stop offset="0" stop-color="#FBD490" />
+						<stop offset="1" stop-color="#F7A64A" />
+					</linearGradient>
+					<linearGradient id="etChGradOlaFondo" x1="0" y1="0" x2="1" y2="0">
+						<stop offset="0" stop-color="#FAB43C" />
+						<stop offset=".5" stop-color="#F59B2E" />
+						<stop offset="1" stop-color="#FAB43C" />
+					</linearGradient>
+					<linearGradient id="etChGradOla" x1="0" y1="0" x2="0" y2="1">
+						<stop offset="0" stop-color="#F27832" />
+						<stop offset="1" stop-color="#E4531D" />
+					</linearGradient>
+				</defs>
+
+				<path d="M0 0H15C13 4 7.5 7 0 8.5Z" fill="url(#etChGradMancha)" />
+				<path d="M80 0H65C67 4 72.5 7 80 8.5Z" fill="url(#etChGradMancha)" />
+
+				<path d="M0 30.6C13 27.8 26 33.2 40 33.2S67 27.8 80 30.6V40H0Z" fill="url(#etChGradOlaFondo)" />
+				<path d="M0 33.2C13 30.8 26 35.6 40 35.6S67 30.8 80 33.2V40H0Z" fill="url(#etChGradOla)" />
+
+				<g fill="none" stroke="#ED672B" stroke-width=".7" stroke-linecap="round">
+					<path d="M24 3.3 25.8 4.7M23.3 5.4H25.8M24 7.5 25.8 6.1" />
+					<path d="M56 3.3 54.2 4.7M56.7 5.4H54.2M56 7.5 54.2 6.1" />
+				</g>
+			</svg>
+
+			<img class="et-logo" th:src="@{/img/logo-la-union.png}" alt="La Unión Supermercado">
+
+			<div class="et-nombre">
+				<span th:text="${#strings.isEmpty(nombre)} ? 'Nombre del producto' : ${nombre}"
+					th:classappend="${#strings.isEmpty(nombre)} ? 'et-vacio'">Nombre del producto</span>
+			</div>
+
+			<div class="et-precio">
+				<div class="et-precio-valor">
+					<span class="et-signo">$</span>
+					<span class="et-entero" th:text="${entero}">0</span>
+					<span class="et-centavos" th:text="${centavos}"
+						th:classappend="${#strings.isEmpty(centavos)} ? 'vacio'"></span>
+				</div>
+			</div>
+
+			<div class="et-lado izq">
+				<small>Fecha</small>
+				<strong th:text="${fecha}">01/01/2026</strong>
+			</div>
+
+			<div class="et-codigo" th:classappend="${#strings.isEmpty(codigo)} ? 'et-vacio'">
+				<img th:src="@{/codigo-barras(valor=${#strings.isEmpty(codigo)} ? '0000000000000' : ${codigo})}" alt="">
+				<span th:text="${#strings.isEmpty(codigo)} ? 'Código de barras' : ${codigo}">Código de barras</span>
+			</div>
+
+			<div class="et-lado der">
+				<small>IVA incluido</small>
+				<strong>Precio final</strong>
+			</div>
+		</th:block>
 
 	</article>
 

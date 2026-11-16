@@ -3,6 +3,9 @@ package ar.com.launion.etiquetas.controller;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -58,6 +61,15 @@ public class DatosGlobales {
 	@ModelAttribute("formatos")
 	public FormatoEtiqueta[] formatos() {
 		return FormatoEtiqueta.values();
+	}
+
+	/** Los botones de tamaño van en dos grupos: Etiquetas y Carteles. */
+	@ModelAttribute("gruposFormato")
+	public Map<String, List<FormatoEtiqueta>> gruposFormato() {
+		Map<String, List<FormatoEtiqueta>> grupos = new LinkedHashMap<>();
+		grupos.put("Etiquetas", FormatoEtiqueta.grupo(false));
+		grupos.put("Carteles", FormatoEtiqueta.grupo(true));
+		return grupos;
 	}
 
 	/** Recuerda el tamaño elegido por un año en esta compu. */

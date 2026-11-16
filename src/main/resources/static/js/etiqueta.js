@@ -28,20 +28,26 @@
 		interno.style.fontSize = bajo + 'mm';
 	}
 
-	// Tamaños de letra máximo y mínimo (mm) de cada formato
+	// Tamaños de letra máximo y mínimo (mm) de cada formato (data-formato de la etiqueta)
 	var MEDIDAS = {
 		grande: { nombre: [7.4, 3.2], precio: [26, 8], codigo: [2.5, 1.4] },
-		chica: { nombre: [4.2, 2], precio: [13.6, 5], codigo: [1.75, 1] }
+		mini: { nombre: [4.6, 2.2], precio: [17, 6], codigo: [1.95, 1.1] },
+		chica: { nombre: [4.2, 2], precio: [13.6, 5], codigo: [1.75, 1] },
+		// Carteles: la media A4 es el A4 achicado (x 0,707)
+		'oferta-a4': { nombre: [13, 5], precio: [86, 20] },
+		'media-oferta': { nombre: [9.2, 3.5], precio: [61, 14] },
+		media: { nombre: [15, 4], precio: [50, 12] }
 	};
 
 	function ajustarEtiqueta(et) {
-		var m = et.classList.contains('etiqueta-chica') ? MEDIDAS.chica : MEDIDAS.grande;
+		var m = MEDIDAS[et.dataset.formato] || MEDIDAS.grande;
 		var nombre = et.querySelector('.et-nombre');
 		ajustar(nombre, nombre && nombre.firstElementChild, m.nombre[0], m.nombre[1]);
 		var precio = et.querySelector('.et-precio');
 		ajustar(precio, precio && precio.firstElementChild, m.precio[0], m.precio[1]);
+		// Los carteles no tienen código de barras
 		var codigo = et.querySelector('.et-codigo');
-		ajustar(codigo, codigo && codigo.querySelector('span'), m.codigo[0], m.codigo[1]);
+		if (codigo && m.codigo) ajustar(codigo, codigo.querySelector('span'), m.codigo[0], m.codigo[1]);
 	}
 
 	function ajustarTodas() {
@@ -50,15 +56,17 @@
 
 	// ---------- Escala de la vista previa (sin deformar) ----------
 
-	// data-escala-mm="130": todas las etiquetas del marco usan la misma escala (la de 13 cm),
-	// así la de 8 x 4 se ve más chica, como sale impresa. Se muestra la que no está oculta.
+	// data-escala-mm="130": las etiquetas del marco usan la misma escala (la de 13 cm),
+	// así la de 9 x 5 y la de 8 x 4 se ven más chicas, como salen impresas.
+	// Los carteles (más anchos que 13 cm) se achican hasta ocupar el ancho del marco.
+	// Se muestra la que no está oculta.
 	var MM = 96 / 25.4;
 
 	function escalar() {
 		document.querySelectorAll('[data-escala]').forEach(function (marco) {
 			var hijo = Array.prototype.find.call(marco.querySelectorAll('.etiqueta'), function (e) { return e.offsetWidth > 0; });
 			if (!hijo || !hijo.offsetWidth) return;
-			var referencia = Number(marco.dataset.escalaMm) * MM || hijo.offsetWidth;
+			var referencia = Math.max(Number(marco.dataset.escalaMm) * MM || 0, hijo.offsetWidth);
 			var s = marco.clientWidth / referencia;
 			marco.style.setProperty('--escala', s);
 			marco.style.height = (hijo.offsetHeight * s) + 'px';

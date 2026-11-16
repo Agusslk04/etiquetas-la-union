@@ -1,6 +1,7 @@
 /* =========================================================
-   Impresión · A4 horizontal (29,7 x 21 cm) · 4 etiquetas de 13 x 8 cm
-   Margen: 18,5 mm a los costados y 25 mm arriba y abajo (simétrico)
+   Impresión en hojas A4. Por defecto: A4 horizontal (29,7 x 21 cm)
+   con 4 etiquetas de 13 x 8 cm; margen de 18,5 mm a los costados
+   y 25 mm arriba y abajo (simétrico). Los otros tamaños, más abajo.
    ========================================================= */
 
 @page {
@@ -129,19 +130,29 @@
 	height: 210mm;
 }
 
-/* Cartelitos de 8 x 4 cm: A4 vertical, 2 columnas x 7 filas
-   Margen: 25 mm a los costados y 8,5 mm arriba y abajo (simétrico) */
-.formato-chica .hoja-marco {
+/* Hoja A4 vertical (9 x 5, 8 x 4 y media A4) */
+.hoja-vertical .hoja-marco {
 	width: calc(210mm * var(--escala, 1));
 	height: calc(297mm * var(--escala, 1));
 }
 
-.formato-chica .hoja,
-.formato-chica .marcas-corte {
+.hoja-vertical .hoja,
+.hoja-vertical .marcas-corte {
 	width: 210mm;
 	height: 297mm;
 }
 
+/* Etiquetas de 9 x 5 cm: A4 vertical, 2 columnas x 5 filas
+   Margen: 15 mm a los costados y 23,5 mm arriba y abajo (simétrico) */
+.formato-mini .grilla {
+	top: 23.5mm;
+	left: 15mm;
+	grid-template-columns: repeat(2, 90mm);
+	grid-template-rows: repeat(5, 50mm);
+}
+
+/* Etiquetas de 8 x 4 cm: A4 vertical, 2 columnas x 7 filas
+   Margen: 25 mm a los costados y 8,5 mm arriba y abajo (simétrico) */
 .formato-chica .grilla {
 	top: 8.5mm;
 	left: 25mm;
@@ -149,7 +160,27 @@
 	grid-template-rows: repeat(7, 40mm);
 }
 
-.barra-info .selector-formato { margin-top: 8px; }
+/* Carteles: ocupan toda la hoja, sin márgenes (como en el Word).
+   A4 horizontal: 1 cartel. A4 vertical: 2 de media A4, uno arriba del otro. */
+.hoja-carteles .grilla {
+	top: 0;
+	left: 0;
+}
+
+.formato-oferta-a4 .grilla {
+	grid-template-columns: 297mm;
+	grid-template-rows: 210mm;
+}
+
+.formato-media-oferta .grilla,
+.formato-media .grilla {
+	grid-template-columns: 210mm;
+	grid-template-rows: repeat(2, 148.5mm);
+}
+
+.barra-info .selector-formatos { margin-top: 8px; }
+
+.barra-info .selector-formato a { padding: 6px 12px; }
 
 .consejo {
 	max-width: 760px;
@@ -188,7 +219,7 @@
 
 	.hoja { transform: none; }
 
-	.formato-chica .hoja-marco {
+	.hoja-vertical .hoja-marco {
 		width: 210mm;
 		height: 297mm;
 	}

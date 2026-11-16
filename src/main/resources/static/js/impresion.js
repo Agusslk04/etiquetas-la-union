@@ -9,7 +9,7 @@
 	var MM = 96 / 25.4;
 
 	function escalar() {
-		// La hoja mide 297 mm (horizontal) o 210 mm (vertical, cartelitos de 8 x 4)
+		// La hoja mide 297 mm (A4 horizontal) o 210 mm (A4 vertical)
 		var hoja = document.querySelector('.hoja');
 		var ancho = (hoja && hoja.offsetWidth) || 297 * MM;
 		var s = Math.min(1, (document.documentElement.clientWidth - 40) / ancho);

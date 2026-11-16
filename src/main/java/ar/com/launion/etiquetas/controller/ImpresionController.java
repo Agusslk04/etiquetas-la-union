@@ -20,10 +20,9 @@ import ar.com.launion.etiquetas.util.Paginas;
 import jakarta.servlet.http.HttpServletResponse;
 
 /**
- * Vista de impresión en hojas A4:
- *  - 13 x 8 cm: 4 por hoja horizontal.
- *  - 8 x 4 cm: 14 por hoja vertical.
- * El tamaño llega como ?formato=grande|chica; si no viene, se usa el último que eligió esta compu.
+ * Vista de impresión en hojas A4 (los tamaños y cuántos entran por hoja están en FormatoEtiqueta).
+ * El tamaño llega como ?formato=grande|mini|chica|oferta-a4|media-oferta|media;
+ * si no viene, se usa el último que eligió esta compu.
  */
 @Controller
 @RequestMapping("/imprimir")

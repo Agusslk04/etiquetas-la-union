@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+	<!--
+		Botones para elegir el tamaño, en dos grupos: Etiquetas y Carteles.
+		  formulario: id del <form> al que pertenecen los botones (null = el form que los contiene)
+		  total:      cantidad de etiquetas, para mostrar cuántas hojas salen de cada tamaño (null = no se muestra)
+	-->
+	<div th:fragment="radios(formulario, total)" class="selector-formatos" role="radiogroup" aria-label="Tamaño del cartel">
+		<div class="grupo-formato" th:each="g : ${gruposFormato}">
+			<span class="grupo-titulo" th:text="${g.key}">Etiquetas</span>
+			<div class="selector-formato">
+				<label th:each="f : ${g.value}" th:title="${f.descripcion}">
+					<input type="radio" name="formato" th:form="${formulario}" th:value="${f.clave}"
+						th:checked="${f == formato}" th:data-por-hoja="${f.porHoja}">
+					<span>[[${f.medida}]]<small th:if="${total != null}" class="hojas-formato"
+						th:text="'· ' + ${#numbers.formatInteger(f.hojasPara(total), 1, 'POINT')} + (${f.hojasPara(total) == 1} ? ' hoja' : ' hojas')">· 1 hoja</small></span>
+				</label>
+			</div>
+		</div>
+	</div>
+
+	<!-- Lo mismo con enlaces, para la vista de impresión: url = esta misma vista -->
+	<nav th:fragment="enlaces(url)" class="selector-formatos" aria-label="Tamaño del cartel">
+		<div class="grupo-formato" th:each="g : ${gruposFormato}">
+			<span class="grupo-titulo" th:text="${g.key}">Etiquetas</span>
+			<div class="selector-formato">
+				<a th:each="f : ${g.value}" th:href="@{${url}(formato=${f.clave})}" th:text="${f.medida}"
+					th:title="${f.descripcion}" th:classappend="${f == formato} ? 'activo'">13 × 8 cm</a>
+			</div>
+		</div>
+	</nav>
+
+</body>
+</html>

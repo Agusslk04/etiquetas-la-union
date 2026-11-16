@@ -1,6 +1,7 @@
 /* =========================================================
-   Etiqueta de precio · 13 x 8 cm · La Unión Supermercado
-   Todo en milímetros para que salga exacta al imprimir.
+   Etiquetas y carteles de precio · La Unión Supermercado
+   Etiquetas de 13 x 8, 9 x 5 y 8 x 4 cm, y carteles A4 y media A4.
+   Todo en milímetros para que salga exacto al imprimir.
    ========================================================= */
 
 .etiqueta {
@@ -251,4 +252,163 @@
 .etiqueta-chica .et-lado strong {
 	font-size: 2.3mm;
 	letter-spacing: 0;
+}
+
+/* =========================================================
+   Etiqueta · 9 x 5 cm (mismo diseño, entre la de 13 x 8 y la de 8 x 4)
+   ========================================================= */
+
+.etiqueta.etiqueta-mini {
+	width: 90mm;
+	height: 50mm;
+}
+
+.etiqueta-mini .et-logo {
+	top: 2.8mm;
+	height: 7.6mm;
+}
+
+.etiqueta-mini .et-nombre {
+	top: 11.2mm;
+	left: 4mm;
+	right: 4mm;
+	height: 7.6mm;
+}
+
+.etiqueta-mini .et-nombre span {
+	font-size: 4.6mm;
+	line-height: 1.04;
+}
+
+.etiqueta-mini .et-precio {
+	top: 19mm;
+	left: 3.5mm;
+	right: 3.5mm;
+	height: 17mm;
+}
+
+.etiqueta-mini .et-precio-valor { font-size: 17mm; }
+
+.etiqueta-mini .et-codigo {
+	bottom: 1.5mm;
+	width: 37mm;
+	height: 10.6mm;
+	padding: .8mm 1.8mm .7mm;
+	border-width: .4mm;
+	border-radius: 1.9mm;
+}
+
+/* 30 mm de barras: deja ~3,5 mm de blanco a cada lado para el lector */
+.etiqueta-mini .et-codigo img {
+	width: 30mm;
+	height: 5.8mm;
+}
+
+.etiqueta-mini .et-codigo span {
+	margin-top: .55mm;
+	font-size: 1.95mm;
+	letter-spacing: .3mm;
+}
+
+.etiqueta-mini .et-lado {
+	bottom: 1.9mm;
+	width: 23mm;
+}
+
+.etiqueta-mini .et-lado.izq { left: 1.2mm; }
+.etiqueta-mini .et-lado.der { right: 1.2mm; }
+
+.etiqueta-mini .et-lado small {
+	margin-bottom: .4mm;
+	font-size: 1.45mm;
+	letter-spacing: .2mm;
+}
+
+.etiqueta-mini .et-lado strong {
+	font-size: 2.6mm;
+	letter-spacing: 0;
+}
+
+/* =========================================================
+   Carteles · A4 y media A4 (diseño de los Word de La Unión)
+   El fondo es la imagen del Word; encima van el nombre (recuadro
+   blanco o zona libre) y el precio (recuadro amarillo).
+   Todo se mide en "u": 1 u = 1 mm en el A4 y 0,707 mm en la media A4,
+   que es el mismo diseño achicado.
+   ========================================================= */
+
+.etiqueta.cartel {
+	--u: 1mm;
+	--cartel-azul: #0B3B8C;
+	width: calc(297 * var(--u));
+	height: calc(210 * var(--u));
+	background: #fff;
+	color: var(--cartel-azul);
+}
+
+.etiqueta.cartel-media { --u: .70707mm; }
+
+.cartel-fondo {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	display: block;
+}
+
+.cartel .et-nombre span {
+	font-weight: 900;
+	line-height: 1.05;
+	letter-spacing: 0;
+}
+
+/* Con título "Ofertas de fin de semana": el nombre va en el recuadro blanco */
+.cartel-con-titulo .et-nombre {
+	top: calc(84.3 * var(--u));
+	left: calc(56 * var(--u));
+	right: calc(56 * var(--u));
+	height: calc(17.8 * var(--u));
+}
+
+.cartel-con-titulo .et-precio {
+	top: calc(114 * var(--u));
+	left: calc(24 * var(--u));
+	right: calc(24 * var(--u));
+	height: calc(68 * var(--u));
+}
+
+/* Sin título: el nombre va grande, entre el logo y el recuadro amarillo */
+.cartel-sin-titulo .et-nombre {
+	top: calc(26 * var(--u));
+	left: calc(52 * var(--u));
+	right: calc(52 * var(--u));
+	height: calc(58 * var(--u));
+}
+
+.cartel-sin-titulo .et-precio {
+	top: calc(97 * var(--u));
+	left: calc(30 * var(--u));
+	right: calc(30 * var(--u));
+	height: calc(56 * var(--u));
+}
+
+/* Precio negro sobre el amarillo. Interlineado corto: los números quedan
+   centrados en el recuadro y pueden ser más grandes. */
+.cartel .et-precio-valor {
+	line-height: .78;
+	letter-spacing: -0.02em;
+}
+
+.cartel-fecha {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: calc(5.5 * var(--u));
+	text-align: center;
+	font-size: calc(3.6 * var(--u));
+	font-weight: 600;
+	letter-spacing: .08em;
+	line-height: 1;
+	color: var(--cartel-azul);
+	opacity: .75;
 }

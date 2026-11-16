@@ -9,11 +9,12 @@
 	<link rel="stylesheet" th:href="@{/css/etiqueta.css}">
 	<link rel="stylesheet" th:href="@{/css/app.css}">
 	<link rel="stylesheet" th:href="@{/css/impresion.css}">
-	<!-- Los cartelitos de 8 x 4 van en hoja A4 vertical -->
+	<!-- 9 x 5, 8 x 4 y media A4 van en hoja A4 vertical -->
 	<style th:if="${formato.hojaVertical}">@page { size: A4 portrait; margin: 0; }</style>
 	<script th:src="@{/js/comun.js}" defer></script>
 </head>
-<body class="pagina-impresion" th:classappend="'formato-' + ${formato.clave}">
+<body class="pagina-impresion" th:classappend="'formato-' + ${formato.clave} + (${formato.hojaVertical} ? ' hoja-vertical' : '')
+	+ (${formato.cartel} ? ' hoja-carteles' : '')">
 
 	<!-- Barra (no se imprime) -->
 	<div class="barra-impresion no-imprimir">
@@ -21,14 +22,13 @@
 			<a th:href="@{${volver}}" class="boton boton-secundario boton-chico" th:text="'‹ ' + ${textoVolver}">‹ Volver</a>
 		</div>
 		<div class="barra-info">
-			<strong th:text="(${totalEtiquetas == 1} ? '1 etiqueta' : ${totalEtiquetas} + ' etiquetas') + ' de ' + ${formato.medida}">1 etiqueta</strong>
+			<strong th:text="${formato.cantidad(totalEtiquetas)}">1 etiqueta de 13 × 8 cm</strong>
 			<span th:text="(${formato.hojaVertical} ? 'A4 vertical · ' : 'A4 horizontal · ') + ${paginas.size()}
 				+ (${paginas.size() == 1} ? ' hoja · ' : ' hojas · ') + ${formato.porHoja} + ' por hoja'">A4 horizontal · 1 hoja</span>
 			<!-- Cambiar de tamaño (vuelve a armar las hojas) -->
-			<nav class="selector-formato" th:if="${urlFormato != null}" aria-label="Tamaño del cartel">
-				<a th:each="f : ${formatos}" th:href="@{${urlFormato}(formato=${f.clave})}" th:text="${f.medida}"
-					th:classappend="${f == formato} ? 'activo'">13 × 8 cm</a>
-			</nav>
+			<th:block th:if="${urlFormato != null}">
+				<nav th:replace="~{fragments/formato :: enlaces(${urlFormato})}"></nav>
+			</th:block>
 		</div>
 		<div class="derecha">
 			<form th:if="${origen == 'hoja'}" th:action="@{/hoja}" method="post">
@@ -57,15 +57,24 @@
 			<section class="hoja">
 
 				<!-- Marcas de corte · 13 x 8: A4 horizontal, 2 x 2 -->
-				<svg th:unless="${formato.hojaVertical}" class="marcas-corte" viewBox="0 0 297 210" aria-hidden="true">
+				<svg th:if="${formato.clave == 'grande'}" class="marcas-corte" viewBox="0 0 297 210" aria-hidden="true">
 					<g stroke="#9A9AA6" stroke-width=".25">
 						<path d="M18.5 16v6M148.5 16v6M278.5 16v6M18.5 188v6M148.5 188v6M278.5 188v6" />
 						<path d="M9.5 25h6M9.5 105h6M9.5 185h6M281.5 25h6M281.5 105h6M281.5 185h6" />
 					</g>
 				</svg>
 
+				<!-- Marcas de corte · 9 x 5: A4 vertical, 2 x 5 -->
+				<svg th:if="${formato.clave == 'mini'}" class="marcas-corte" viewBox="0 0 210 297" aria-hidden="true">
+					<g stroke="#9A9AA6" stroke-width=".25">
+						<path d="M15 15.5v6M105 15.5v6M195 15.5v6M15 275.5v6M105 275.5v6M195 275.5v6" />
+						<path d="M7 23.5h6M7 73.5h6M7 123.5h6M7 173.5h6M7 223.5h6M7 273.5h6" />
+						<path d="M197 23.5h6M197 73.5h6M197 123.5h6M197 173.5h6M197 223.5h6M197 273.5h6" />
+					</g>
+				</svg>
+
 				<!-- Marcas de corte · 8 x 4: A4 vertical, 2 x 7 -->
-				<svg th:if="${formato.hojaVertical}" class="marcas-corte" viewBox="0 0 210 297" aria-hidden="true">
+				<svg th:if="${formato.clave == 'chica'}" class="marcas-corte" viewBox="0 0 210 297" aria-hidden="true">
 					<g stroke="#9A9AA6" stroke-width=".25">
 						<path d="M25 1.5v5M105 1.5v5M185 1.5v5M25 290.5v5M105 290.5v5M185 290.5v5" />
 						<path d="M17 8.5h6M17 48.5h6M17 88.5h6M17 128.5h6M17 168.5h6M17 208.5h6M17 248.5h6M17 288.5h6" />
@@ -75,7 +84,7 @@
 
 				<div class="grilla">
 					<th:block th:each="p : ${pagina}">
-						<article th:replace="~{fragments/etiqueta :: etiqueta(${p.nombre}, ${p.precioEntero}, ${p.precioCentavos}, ${p.codigoBarras}, ${hoy}, ${formato.clave})}"></article>
+						<article th:replace="~{fragments/etiqueta :: etiqueta(${p.nombre}, ${p.precioEntero}, ${p.precioCentavos}, ${p.codigoBarras}, ${hoy}, ${formato})}"></article>
 					</th:block>
 				</div>
 			</section>
@@ -84,7 +93,9 @@
 
 	<p class="consejo no-imprimir">
 		Si algo sale corrido, en la ventana de impresión elegí <strong>Escala: Predeterminada</strong>
-		y <strong>Márgenes: Ninguno</strong>. Cortá siguiendo las marcas grises.
+		y <strong>Márgenes: Ninguno</strong>.
+		<th:block th:unless="${formato.cartel}">Cortá siguiendo las marcas grises.</th:block>
+		<th:block th:if="${formato.cartel and formato.porHoja == 2}">Cortá la hoja por la mitad.</th:block>
 	</p>
 
 	<script th:src="@{/js/etiqueta.js}"></script>

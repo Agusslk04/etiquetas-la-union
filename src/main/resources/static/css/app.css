@@ -415,6 +415,38 @@ a { color: var(--naranja-osc); }
 	font-weight: 500;
 }
 
+/* Dos grupos de botones: Etiquetas [13 × 8 | 9 × 5 | 8 × 4] · Carteles [A4 oferta | ...] */
+.selector-formatos {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	gap: 10px 22px;
+}
+
+.grupo-formato {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 8px;
+}
+
+.grupo-titulo {
+	color: var(--azul);
+	font-size: .82rem;
+	font-weight: 700;
+	letter-spacing: .06em;
+	text-transform: uppercase;
+}
+
+.grupo-formato .selector-formato {
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.vista-previa .selector-formatos { margin-bottom: 18px; }
+
 .elegir-tamanio {
 	display: flex;
 	align-items: center;
