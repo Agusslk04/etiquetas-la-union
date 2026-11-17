@@ -1,6 +1,6 @@
 /* =========================================================
    Etiquetas y carteles de precio · La Unión Supermercado
-   Etiquetas de 13 x 8, 9 x 5 y 8 x 4 cm, y carteles A4 y media A4.
+   Etiquetas de 13 x 8, 9 x 5 y 6,5 x 3 cm, y carteles A4 y media A4.
    Todo en milímetros para que salga exacto al imprimir.
    ========================================================= */
 
@@ -179,83 +179,83 @@
 .et-codigo.et-vacio span { opacity: .45; letter-spacing: .1mm; }
 
 /* =========================================================
-   Cartelito chico · 8 x 4 cm (mismo diseño, todo más compacto)
+   Cartelito chico · 6,5 x 3 cm (mismo diseño, todo más compacto)
    ========================================================= */
 
 .etiqueta.etiqueta-chica {
-	width: 80mm;
-	height: 40mm;
+	width: 65mm;
+	height: 30mm;
 }
 
 .etiqueta-chica .et-logo {
-	top: 2.2mm;
-	height: 6.4mm;
+	top: 1.65mm;
+	height: 4.8mm;
 }
 
 .etiqueta-chica .et-nombre {
-	top: 9.3mm;
-	left: 3mm;
-	right: 3mm;
-	height: 6.4mm;
+	top: 7mm;
+	left: 2.4mm;
+	right: 2.4mm;
+	height: 4.8mm;
 }
 
 .etiqueta-chica .et-nombre span {
-	font-size: 4.2mm;
+	font-size: 3.15mm;
 	line-height: 1.04;
 }
 
 .etiqueta-chica .et-precio {
-	top: 15.6mm;
-	left: 3mm;
-	right: 3mm;
-	height: 13.6mm;
+	top: 11.7mm;
+	left: 2.4mm;
+	right: 2.4mm;
+	height: 10.2mm;
 }
 
-.etiqueta-chica .et-precio-valor { font-size: 13.6mm; }
+.etiqueta-chica .et-precio-valor { font-size: 10.2mm; }
 
 .etiqueta-chica .et-codigo {
-	bottom: 1.2mm;
-	width: 34mm;
-	height: 9.2mm;
-	padding: .7mm 1.5mm .6mm;
-	border-width: .35mm;
-	border-radius: 1.6mm;
+	bottom: .9mm;
+	width: 33mm;
+	height: 6.9mm;
+	padding: .4mm 1.25mm .45mm;
+	border-width: .25mm;
+	border-radius: 1.2mm;
 }
 
 /* 27 mm de barras: deja ~3 mm de blanco a cada lado para el lector */
 .etiqueta-chica .et-codigo img {
 	width: 27mm;
-	height: 4.9mm;
+	height: 3.7mm;
 }
 
 .etiqueta-chica .et-codigo span {
-	margin-top: .5mm;
-	font-size: 1.75mm;
-	letter-spacing: .25mm;
+	margin-top: .35mm;
+	font-size: 1.35mm;
+	letter-spacing: .18mm;
 }
 
 .etiqueta-chica .et-lado {
-	bottom: 1.5mm;
-	width: 20.5mm;
+	bottom: 1.15mm;
+	width: 14.5mm;
 	line-height: 1.05;
 }
 
-.etiqueta-chica .et-lado.izq { left: 1mm; }
-.etiqueta-chica .et-lado.der { right: 1mm; }
+.etiqueta-chica .et-lado.izq { left: .75mm; }
+.etiqueta-chica .et-lado.der { right: .75mm; }
 
 .etiqueta-chica .et-lado small {
-	margin-bottom: .35mm;
-	font-size: 1.3mm;
-	letter-spacing: .15mm;
+	margin-bottom: .25mm;
+	font-size: 1mm;
+	letter-spacing: .1mm;
 }
 
 .etiqueta-chica .et-lado strong {
-	font-size: 2.3mm;
+	font-size: 1.7mm;
 	letter-spacing: 0;
 }
 
 /* =========================================================
-   Etiqueta · 9 x 5 cm (mismo diseño, entre la de 13 x 8 y la de 8 x 4)
+   Etiqueta · 9 x 5 cm (mismo diseño, entre la de 13 x 8 y la de 6,5 x 3)
    ========================================================= */
 
 .etiqueta.etiqueta-mini {

@@ -9,7 +9,7 @@
 	<link rel="stylesheet" th:href="@{/css/etiqueta.css}">
 	<link rel="stylesheet" th:href="@{/css/app.css}">
 	<link rel="stylesheet" th:href="@{/css/impresion.css}">
-	<!-- 9 x 5, 8 x 4 y media A4 van en hoja A4 vertical -->
+	<!-- 9 x 5, 6,5 x 3 y media A4 van en hoja A4 vertical -->
 	<style th:if="${formato.hojaVertical}">@page { size: A4 portrait; margin: 0; }</style>
 	<script th:src="@{/js/comun.js}" defer></script>
 </head>
@@ -73,12 +73,12 @@
 					</g>
 				</svg>
 
-				<!-- Marcas de corte · 8 x 4: A4 vertical, 2 x 7 -->
+				<!-- Marcas de corte · 6,5 x 3: A4 vertical, 3 x 9 -->
 				<svg th:if="${formato.clave == 'chica'}" class="marcas-corte" viewBox="0 0 210 297" aria-hidden="true">
 					<g stroke="#9A9AA6" stroke-width=".25">
-						<path d="M25 1.5v5M105 1.5v5M185 1.5v5M25 290.5v5M105 290.5v5M185 290.5v5" />
-						<path d="M17 8.5h6M17 48.5h6M17 88.5h6M17 128.5h6M17 168.5h6M17 208.5h6M17 248.5h6M17 288.5h6" />
-						<path d="M187 8.5h6M187 48.5h6M187 88.5h6M187 128.5h6M187 168.5h6M187 208.5h6M187 248.5h6M187 288.5h6" />
+						<path d="M7.5 6.5v5M72.5 6.5v5M137.5 6.5v5M202.5 6.5v5M7.5 285.5v5M72.5 285.5v5M137.5 285.5v5M202.5 285.5v5" />
+						<path d="M2.5 13.5h3M2.5 43.5h3M2.5 73.5h3M2.5 103.5h3M2.5 133.5h3M2.5 163.5h3M2.5 193.5h3M2.5 223.5h3M2.5 253.5h3M2.5 283.5h3" />
+						<path d="M204.5 13.5h3M204.5 43.5h3M204.5 73.5h3M204.5 103.5h3M204.5 133.5h3M204.5 163.5h3M204.5 193.5h3M204.5 223.5h3M204.5 253.5h3M204.5 283.5h3" />
 					</g>
 				</svg>
 

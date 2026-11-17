@@ -361,7 +361,7 @@ a { color: var(--naranja-osc); }
 	font-size: .9rem;
 }
 
-/* ===== Selector de tamaño: [ 13 × 8 cm | 8 × 4 cm ] ===== */
+/* ===== Selector de tamaño de etiquetas y carteles ===== */
 
 .selector-formato {
 	display: inline-flex;
@@ -415,7 +415,7 @@ a { color: var(--naranja-osc); }
 	font-weight: 500;
 }
 
-/* Dos grupos de botones: Etiquetas [13 × 8 | 9 × 5 | 8 × 4] · Carteles [A4 oferta | ...] */
+/* Dos grupos de botones: Etiquetas [13 × 8 | 9 × 5 | 6,5 × 3] · Carteles [A4 oferta | ...] */
 .selector-formatos {
 	display: flex;
 	flex-wrap: wrap;

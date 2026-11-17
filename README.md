@@ -6,7 +6,7 @@ Sistema web (Spring Boot MVC + Thymeleaf + PostgreSQL) para imprimir etiquetas y
 |---|---|---|---|
 | **Etiqueta 13 × 8 cm** | naranja, con código de barras y fecha | horizontal | 4 (2 × 2) |
 | **Etiqueta 9 × 5 cm** | naranja, con código de barras y fecha | vertical | 10 (2 × 5) |
-| **Etiqueta 8 × 4 cm** | naranja, con código de barras y fecha | vertical | 14 (2 × 7) |
+| **Etiqueta 6,5 × 3 cm** | naranja, con código de barras y fecha | vertical | 27 (3 × 9) |
 | **Cartel A4 oferta** | azul, título *Ofertas de fin de semana* | horizontal | 1 (hoja entera) |
 | **Cartel media A4 oferta** | azul, título *Ofertas de fin de semana* | vertical | 2 (uno arriba del otro) |
 | **Cartel media A4** | azul, sin título (precios normales) | vertical | 2 (uno arriba del otro) |

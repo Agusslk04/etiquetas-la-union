@@ -32,7 +32,7 @@
 	var MEDIDAS = {
 		grande: { nombre: [7.4, 3.2], precio: [26, 8], codigo: [2.5, 1.4] },
 		mini: { nombre: [4.6, 2.2], precio: [17, 6], codigo: [1.95, 1.1] },
-		chica: { nombre: [4.2, 2], precio: [13.6, 5], codigo: [1.75, 1] },
+		chica: { nombre: [3.15, 1.5], precio: [10.2, 3.75], codigo: [1.35, 1] },
 		// Carteles: la media A4 es el A4 achicado (x 0,707)
 		'oferta-a4': { nombre: [13, 5], precio: [86, 20] },
 		'media-oferta': { nombre: [9.2, 3.5], precio: [61, 14] },
@@ -57,7 +57,7 @@
 	// ---------- Escala de la vista previa (sin deformar) ----------
 
 	// data-escala-mm="130": las etiquetas del marco usan la misma escala (la de 13 cm),
-	// así la de 9 x 5 y la de 8 x 4 se ven más chicas, como salen impresas.
+	// así la de 9 x 5 y la de 6,5 x 3 se ven más chicas, como salen impresas.
 	// Los carteles (más anchos que 13 cm) se achican hasta ocupar el ancho del marco.
 	// Se muestra la que no está oculta.
 	var MM = 96 / 25.4;

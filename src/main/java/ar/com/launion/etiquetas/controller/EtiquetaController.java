@@ -79,7 +79,7 @@ public class EtiquetaController {
 			redirect.addFlashAttribute("mensaje", "«" + producto.getNombre() + "» se guardó.");
 			return "redirect:/productos";
 		default:
-			// El tamaño elegido en el panel (13 x 8 o 8 x 4)
+			// El tamaño elegido en el panel
 			return "redirect:/imprimir/producto/" + producto.getIdProducto() + "?formato=" + FormatoEtiqueta.de(formato).getClave();
 		}
 	}

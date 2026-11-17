@@ -4,7 +4,7 @@
 
 	<!--
 		Etiqueta o cartel de precio. formato = un FormatoEtiqueta:
-		  - etiquetas 13 x 8, 9 x 5 y 8 x 4 cm (fondo naranja, código de barras y fecha)
+		  - etiquetas 13 x 8, 9 x 5 y 6,5 x 3 cm (fondo naranja, código de barras y fecha)
 		  - carteles A4 y media A4 (fondo de los Word de La Unión, precio en el recuadro amarillo)
 		Se usa igual en la vista previa del panel y en las hojas A4 que se imprimen.
 	-->
@@ -98,7 +98,7 @@
 				</g>
 			</svg>
 
-			<!-- Fondo 8 x 4 (mismo diseño, dibujado a su medida) -->
+			<!-- Fondo 6,5 x 3 (mismo diseño, adaptado a su medida) -->
 			<svg th:if="${formato.clave == 'chica'}" class="et-fondo" viewBox="0 0 80 40" preserveAspectRatio="none" aria-hidden="true">
 				<defs>
 					<linearGradient id="etChGradMancha" x1="0" y1="0" x2="1" y2="1">

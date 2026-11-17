@@ -10,7 +10,7 @@
 
 		<section class="titulo-pagina">
 			<h1>Hoja A4</h1>
-			<p th:if="${productos.totalElements == 0}">Etiquetas de 13 × 8, 9 × 5 u 8 × 4 cm, o carteles A4 y media A4.</p>
+			<p th:if="${productos.totalElements == 0}">Etiquetas de 13 × 8, 9 × 5 o 6,5 × 3 cm, o carteles A4 y media A4.</p>
 			<p th:unless="${productos.totalElements == 0}" id="resumenHoja" th:attr="data-total=${totalEtiquetas}">
 				<strong th:text="${#numbers.formatInteger(totalEtiquetas, 1, 'POINT')}">0</strong>
 				<span th:text="${totalEtiquetas == 1} ? 'etiqueta para imprimir' : 'etiquetas para imprimir'">etiquetas para imprimir</span>

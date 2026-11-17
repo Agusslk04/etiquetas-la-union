@@ -9,7 +9,7 @@ import java.util.List;
  * Etiquetas (diseño naranja, con código de barras y fecha):
  *  - GRANDE: 13 x 8 cm, 4 por hoja A4 horizontal (2 x 2).
  *  - MINI:    9 x 5 cm, 10 por hoja A4 vertical  (2 x 5).
- *  - CHICA:   8 x 4 cm, 14 por hoja A4 vertical  (2 x 7).
+ *  - CHICA: 6,5 x 3 cm, 27 por hoja A4 vertical  (3 x 9).
  *
  * Carteles (diseño azul con el precio en el recuadro amarillo):
  *  - OFERTA_A4:    A4 horizontal entero, con el título "Ofertas de fin de semana".
@@ -20,7 +20,7 @@ public enum FormatoEtiqueta {
 
 	GRANDE("grande", "13 × 8 cm", "Etiqueta de 13 × 8 cm", 4, false, false),
 	MINI("mini", "9 × 5 cm", "Etiqueta de 9 × 5 cm", 10, true, false),
-	CHICA("chica", "8 × 4 cm", "Etiqueta de 8 × 4 cm", 14, true, false),
+	CHICA("chica", "6,5 × 3 cm", "Etiqueta de 6,5 × 3 cm", 27, true, false),
 
 	OFERTA_A4("oferta-a4", "A4 oferta", "A4 · Ofertas de fin de semana", 1, false, true),
 	MEDIA_OFERTA("media-oferta", "Media A4 oferta", "Media A4 · Ofertas de fin de semana", 2, true, true),

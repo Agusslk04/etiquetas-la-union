@@ -130,7 +130,7 @@
 	height: 210mm;
 }
 
-/* Hoja A4 vertical (9 x 5, 8 x 4 y media A4) */
+/* Hoja A4 vertical (9 x 5, 6,5 x 3 y media A4) */
 .hoja-vertical .hoja-marco {
 	width: calc(210mm * var(--escala, 1));
 	height: calc(297mm * var(--escala, 1));
@@ -151,13 +151,13 @@
 	grid-template-rows: repeat(5, 50mm);
 }
 
-/* Etiquetas de 8 x 4 cm: A4 vertical, 2 columnas x 7 filas
-   Margen: 25 mm a los costados y 8,5 mm arriba y abajo (simétrico) */
+/* Etiquetas de 6,5 x 3 cm: A4 vertical, 3 columnas x 9 filas
+   Margen: 7,5 mm a los costados y 13,5 mm arriba y abajo (simétrico) */
 .formato-chica .grilla {
-	top: 8.5mm;
-	left: 25mm;
-	grid-template-columns: repeat(2, 80mm);
-	grid-template-rows: repeat(7, 40mm);
+	top: 13.5mm;
+	left: 7.5mm;
+	grid-template-columns: repeat(3, 65mm);
+	grid-template-rows: repeat(9, 30mm);
 }
 
 /* Carteles: ocupan toda la hoja, sin márgenes (como en el Word).

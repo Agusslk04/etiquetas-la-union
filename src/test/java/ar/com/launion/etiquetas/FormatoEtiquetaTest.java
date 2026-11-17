@@ -38,12 +38,12 @@ class FormatoEtiquetaTest {
 		assertTrue(FormatoEtiqueta.MINI.isHojaVertical());
 		assertEquals(199, FormatoEtiqueta.MINI.hojasPara(1989));
 
-		// 8 x 4: 14 por hoja vertical (2 columnas x 7 filas)
-		assertEquals(14, FormatoEtiqueta.CHICA.getPorHoja());
+		// 6,5 x 3: 27 por hoja vertical (3 columnas x 9 filas)
+		assertEquals(27, FormatoEtiqueta.CHICA.getPorHoja());
 		assertTrue(FormatoEtiqueta.CHICA.isHojaVertical());
-		assertEquals(1, FormatoEtiqueta.CHICA.hojasPara(14));
-		assertEquals(2, FormatoEtiqueta.CHICA.hojasPara(15));
-		assertEquals(143, FormatoEtiqueta.CHICA.hojasPara(1989));
+		assertEquals(1, FormatoEtiqueta.CHICA.hojasPara(27));
+		assertEquals(2, FormatoEtiqueta.CHICA.hojasPara(28));
+		assertEquals(74, FormatoEtiqueta.CHICA.hojasPara(1989));
 
 		// Carteles: A4 entero (horizontal) y media A4 (2 por hoja vertical; uno solo usa media hoja)
 		assertEquals(3, FormatoEtiqueta.OFERTA_A4.hojasPara(3));
@@ -68,6 +68,8 @@ class FormatoEtiquetaTest {
 	void describeLaCantidad() {
 		assertEquals("1 etiqueta de 13 × 8 cm", FormatoEtiqueta.GRANDE.cantidad(1));
 		assertEquals("12 etiquetas de 9 × 5 cm", FormatoEtiqueta.MINI.cantidad(12));
+		assertEquals("1 etiqueta de 6,5 × 3 cm", FormatoEtiqueta.CHICA.cantidad(1));
+		assertEquals("28 etiquetas de 6,5 × 3 cm", FormatoEtiqueta.CHICA.cantidad(28));
 		assertEquals("1 cartel · A4 · Ofertas de fin de semana", FormatoEtiqueta.OFERTA_A4.cantidad(1));
 		assertEquals("3 carteles · Media A4 · Sin título", FormatoEtiqueta.MEDIA.cantidad(3));
 	}

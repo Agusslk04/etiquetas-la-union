@@ -6,7 +6,7 @@ document.addEventListener('click', function (e) {
 	}
 });
 
-/* Tamaño de cartel (13 x 8 / 8 x 4): esta compu recuerda el último elegido */
+/* Tamaño de etiqueta o cartel: esta compu recuerda el último elegido */
 document.addEventListener('change', function (e) {
 	var radio = e.target;
 	if (radio.name === 'formato' && radio.type === 'radio' && radio.checked) {
