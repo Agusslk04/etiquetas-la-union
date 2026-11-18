@@ -14,6 +14,7 @@ public class EtiquetaForm {
 	private Long idProducto;
 	private String nombre;
 	private String precio;
+	private Integer unidadesOferta = 1;
 	private String codigoBarras;
 
 	public EtiquetaForm() {
@@ -25,6 +26,7 @@ public class EtiquetaForm {
 		form.setIdProducto(p.getIdProducto());
 		form.setNombre(p.getNombre());
 		form.setPrecio(p.getPrecioEditable());
+		form.setUnidadesOferta(p.getUnidadesOferta());
 		form.setCodigoBarras(p.getCodigoBarras());
 		return form;
 	}
@@ -64,6 +66,14 @@ public class EtiquetaForm {
 
 	public void setPrecio(String precio) {
 		this.precio = precio;
+	}
+
+	public Integer getUnidadesOferta() {
+		return unidadesOferta;
+	}
+
+	public void setUnidadesOferta(Integer unidadesOferta) {
+		this.unidadesOferta = unidadesOferta;
 	}
 
 	public String getCodigoBarras() {

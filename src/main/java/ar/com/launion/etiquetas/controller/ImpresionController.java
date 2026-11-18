@@ -21,7 +21,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Vista de impresión en hojas A4 (los tamaños y cuántos entran por hoja están en FormatoEtiqueta).
- * El tamaño llega como ?formato=grande|mini|chica|oferta-a4|media-oferta|media;
+ * El tamaño llega como ?formato=<clave de FormatoEtiqueta>;
  * si no viene, se usa el último que eligió esta compu.
  */
 @Controller

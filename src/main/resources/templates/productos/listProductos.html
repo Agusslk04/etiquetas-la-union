@@ -64,6 +64,7 @@
 						<td class="col-check"><input type="checkbox" name="ids" th:value="${p.idProducto}" aria-label="Marcar"></td>
 						<td class="col-nombre">
 							<span th:text="${p.nombre}">Producto</span>
+							<span class="chip" th:if="${p.unidadesOferta > 1}" th:text="'Superoferta: ' + ${p.unidadesOferta} + ' ×'">Superoferta</span>
 							<span class="chip" th:if="${p.enHoja}">En la hoja</span>
 						</td>
 						<td class="col-codigo ocultar-movil" th:text="${p.codigoBarras}"></td>

@@ -92,7 +92,10 @@
 					</tr>
 					<tr th:each="p, i : ${productos.content}">
 						<td class="centro col-num" th:text="${productos.number * productos.size + i.count}">1</td>
-						<td class="col-nombre" th:text="${p.nombre}">Producto</td>
+						<td class="col-nombre">
+							<span th:text="${p.nombre}">Producto</span>
+							<span class="chip" th:if="${p.unidadesOferta > 1}" th:text="'Superoferta: ' + ${p.unidadesOferta} + ' ×'">Superoferta</span>
+						</td>
 						<td class="col-codigo ocultar-movil" th:text="${p.codigoBarras}"></td>
 						<td class="der col-precio" th:text="${p.precioTexto}">$ 0</td>
 					</tr>

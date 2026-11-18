@@ -66,7 +66,11 @@
 				</thead>
 				<tbody>
 					<tr th:each="p : ${productos.content}">
-						<td class="col-nombre" th:text="${p.nombre}">Producto</td>
+						<td class="col-nombre">
+							<span th:text="${p.nombre}">Producto</span>
+							<a class="chip" th:if="${p.unidadesOferta > 1}" th:href="@{/productos/editar/{id}(id=${p.idProducto})}"
+								th:text="'Superoferta: ' + ${p.unidadesOferta} + ' ×'" title="Editar unidades de la oferta">Superoferta</a>
+						</td>
 						<td class="col-codigo ocultar-movil" th:text="${p.codigoBarras}"></td>
 						<td class="col-precio-editable">
 							<input type="hidden" name="ids" th:value="${p.idProducto}">

@@ -84,7 +84,7 @@
 
 				<div class="grilla">
 					<th:block th:each="p : ${pagina}">
-						<article th:replace="~{fragments/etiqueta :: etiqueta(${p.nombre}, ${p.precioEntero}, ${p.precioCentavos}, ${p.codigoBarras}, ${hoy}, ${formato})}"></article>
+						<article th:replace="~{fragments/etiqueta :: etiqueta(${p.nombre}, ${p.precioEntero}, ${p.precioCentavos}, ${p.codigoBarras}, ${hoy}, ${formato}, ${p.unidadesOferta})}"></article>
 					</th:block>
 				</div>
 			</section>

@@ -100,6 +100,10 @@ public class EtiquetaController {
 		}
 
 		String codigo = form.getCodigoBarras() == null ? "" : form.getCodigoBarras().trim();
+		if (!result.hasFieldErrors("unidadesOferta") && (form.getUnidadesOferta() == null
+				|| form.getUnidadesOferta() < 1 || form.getUnidadesOferta() > 99)) {
+			result.rejectValue("unidadesOferta", "rango", "Elegí entre 1 y 99 unidades. Usá 1 para mostrar solo el precio.");
+		}
 		form.setCodigoBarras(codigo);
 		if (codigo.isEmpty()) {
 			result.rejectValue("codigoBarras", "vacio", "Escaneá o escribí el código de barras.");

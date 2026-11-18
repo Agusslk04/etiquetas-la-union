@@ -13,7 +13,7 @@
 			<div class="selector-formato">
 				<label th:each="f : ${g.value}" th:title="${f.descripcion}">
 					<input type="radio" name="formato" th:form="${formulario}" th:value="${f.clave}"
-						th:checked="${f == formato}" th:data-por-hoja="${f.porHoja}">
+						th:checked="${f == formato}" th:data-por-hoja="${f.porHoja}" th:data-superoferta="${f.superoferta}">
 					<span>[[${f.medida}]]<small th:if="${total != null}" class="hojas-formato"
 						th:text="'· ' + ${#numbers.formatInteger(f.hojasPara(total), 1, 'POINT')} + (${f.hojasPara(total) == 1} ? ' hoja' : ' hojas')">· 1 hoja</small></span>
 				</label>

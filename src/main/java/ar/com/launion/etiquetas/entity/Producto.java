@@ -27,6 +27,10 @@ public class Producto {
 	@Column(name = "precio", precision = 12, scale = 2, nullable = false)
 	private BigDecimal precio;
 
+	// Los productos anteriores a esta opción tienen null: se interpretan como 1 unidad.
+	@Column(name = "unidades_oferta")
+	private Integer unidadesOferta = 1;
+
 	@Column(name = "codigo_barras", length = 40, nullable = false, unique = true)
 	private String codigoBarras;
 
@@ -104,6 +108,14 @@ public class Producto {
 
 	public void setPrecio(BigDecimal precio) {
 		this.precio = precio;
+	}
+
+	public int getUnidadesOferta() {
+		return unidadesOferta == null ? 1 : unidadesOferta;
+	}
+
+	public void setUnidadesOferta(int unidadesOferta) {
+		this.unidadesOferta = unidadesOferta;
 	}
 
 	public String getCodigoBarras() {

@@ -36,7 +36,10 @@
 		// Carteles: la media A4 es el A4 achicado (x 0,707)
 		'oferta-a4': { nombre: [13, 5], precio: [86, 20] },
 		'media-oferta': { nombre: [9.2, 3.5], precio: [61, 14] },
-		media: { nombre: [15, 4], precio: [50, 12] }
+		a4: { nombre: [21.2, 5.7], precio: [70.7, 17] },
+		media: { nombre: [15, 4], precio: [50, 12] },
+		'superoferta-a4': { nombre: [13.5, 4.2], precio: [64, 17] },
+		'media-superoferta': { nombre: [9.5, 3], precio: [45.25, 12] }
 	};
 
 	function ajustarEtiqueta(et) {

@@ -9,11 +9,16 @@ Sistema web (Spring Boot MVC + Thymeleaf + PostgreSQL) para imprimir etiquetas y
 | **Etiqueta 6,5 × 3 cm** | naranja, con código de barras y fecha | vertical | 27 (3 × 9) |
 | **Cartel A4 oferta** | azul, título *Ofertas de fin de semana* | horizontal | 1 (hoja entera) |
 | **Cartel media A4 oferta** | azul, título *Ofertas de fin de semana* | vertical | 2 (uno arriba del otro) |
+| **Cartel A4** | azul, sin título (precios normales) | horizontal | 1 (hoja entera) |
 | **Cartel media A4** | azul, sin título (precios normales) | vertical | 2 (uno arriba del otro) |
+| **Cartel A4 Superoferta** | nuevo diseño *Superoferta*, con recuadro amarillo y *Aprovechá* | horizontal | 1 (hoja entera) |
+| **Cartel media A4 Superoferta** | mismo diseño *Superoferta* | vertical | 2 (uno arriba del otro) |
 
-Los carteles usan el fondo de los Word de La Unión (`static/img/cartel-oferta.jpg` y `cartel-precio.jpg`): el nombre va en el recuadro blanco (o arriba, en el que no tiene título) y el precio en el amarillo. Llevan la fecha chiquita abajo. Si se imprime un solo cartel de media A4, sale en la mitad de arriba de la hoja.
+Los carteles usan los fondos de La Unión (`static/img/cartel-oferta.jpg`, `cartel-precio.jpg` y `cartel-superoferta.png`): el nombre va en el recuadro blanco (o arriba, en el que no tiene título) y el precio en el amarillo. Llevan la fecha chiquita abajo. Cada diseño está disponible en A4 completa (29,7 × 21 cm) y media A4 (21 × 14,85 cm). Si se imprime un solo cartel de media A4, sale en la mitad de arriba de la hoja.
 
 El tamaño se elige con los botones **Etiquetas / Carteles** en *Nueva etiqueta*, *Hoja A4*, *Carga Excel* y en la barra de la vista de impresión. Cada compu recuerda el último que usó.
+
+En **A4 Superoferta** y **Media A4 Superoferta**, el campo **Unidades en Superoferta** permite mostrar un precio simple (1 unidad), **2 × $…**, **3 × $…**, etc. El precio ingresado es el total de la oferta; no se multiplica automáticamente. La cantidad queda guardada con el producto y se puede cambiar desde **Editar**. Los demás diseños siguen mostrando solo el precio. Los productos anteriores y los nuevos importados de Excel empiezan con 1 unidad.
 
 ## Cómo se usa
 
@@ -91,7 +96,7 @@ La primera vez hay que abrir el puerto en el Firewall de esta compu: clic derech
 entity/                    Producto, Carga (cada Excel subido y sus productos)
 repository/                ProductoRepository, CargaRepository
 service/ (+ implement/)    ProductoService, CargaService, CodigoBarrasService (EAN-13 / Code 128 en SVG)
-util/                      Precio, LectorExcel, PlantillaExcel (Apache POI), FormatoEtiqueta (los 6 tamaños)
+util/                      Precio, LectorExcel, PlantillaExcel (Apache POI), FormatoEtiqueta (los 9 formatos)
 controller/                EtiquetaController, CargaController, ProductoController, HojaController,
                            ImpresionController, CodigoBarrasController
 templates/                 vistas Thymeleaf (fragments/etiqueta.html = etiquetas y carteles,

@@ -14,7 +14,9 @@ import java.util.List;
  * Carteles (diseño azul con el precio en el recuadro amarillo):
  *  - OFERTA_A4:    A4 horizontal entero, con el título "Ofertas de fin de semana".
  *  - MEDIA_OFERTA: media A4 (21 x 14,85 cm) con el título; 2 por hoja A4 vertical.
+ *  - A4:          A4 horizontal sin título, para precios normales.
  *  - MEDIA:        media A4 sin título, para precios normales; 2 por hoja A4 vertical.
+ *  - SUPEROFERTA_A4 / MEDIA_SUPEROFERTA: nuevo diseño Superoferta en A4 y media A4.
  */
 public enum FormatoEtiqueta {
 
@@ -24,7 +26,10 @@ public enum FormatoEtiqueta {
 
 	OFERTA_A4("oferta-a4", "A4 oferta", "A4 · Ofertas de fin de semana", 1, false, true),
 	MEDIA_OFERTA("media-oferta", "Media A4 oferta", "Media A4 · Ofertas de fin de semana", 2, true, true),
-	MEDIA("media", "Media A4", "Media A4 · Sin título", 2, true, true);
+	A4("a4", "A4", "A4 · Sin título", 1, false, true),
+	MEDIA("media", "Media A4", "Media A4 · Sin título", 2, true, true),
+	SUPEROFERTA_A4("superoferta-a4", "A4 Superoferta", "A4 · Superoferta", 1, false, true),
+	MEDIA_SUPEROFERTA("media-superoferta", "Media A4 Superoferta", "Media A4 · Superoferta", 2, true, true);
 
 	/** Nombre de la cookie donde cada compu recuerda el último tamaño usado. */
 	public static final String COOKIE = "formato";
@@ -79,16 +84,20 @@ public enum FormatoEtiqueta {
 		return switch (this) {
 			case OFERTA_A4 -> "cartel cartel-a4 cartel-con-titulo";
 			case MEDIA_OFERTA -> "cartel cartel-media cartel-con-titulo";
+			case A4 -> "cartel cartel-a4 cartel-sin-titulo";
 			case MEDIA -> "cartel cartel-media cartel-sin-titulo";
+			case SUPEROFERTA_A4 -> "cartel cartel-a4 cartel-superoferta";
+			case MEDIA_SUPEROFERTA -> "cartel cartel-media cartel-superoferta";
 			default -> "etiqueta-" + clave;
 		};
 	}
 
-	/** Imagen de fondo de los carteles (sacada de los Word de La Unión); null en las etiquetas. */
+	/** Imagen de fondo de cada diseño de cartel; null en las etiquetas. */
 	public String getFondo() {
 		return switch (this) {
 			case OFERTA_A4, MEDIA_OFERTA -> "/img/cartel-oferta.jpg";
-			case MEDIA -> "/img/cartel-precio.jpg";
+			case A4, MEDIA -> "/img/cartel-precio.jpg";
+			case SUPEROFERTA_A4, MEDIA_SUPEROFERTA -> "/img/cartel-superoferta.png";
 			default -> null;
 		};
 	}
@@ -115,6 +124,10 @@ public enum FormatoEtiqueta {
 
 	public boolean isCartel() {
 		return cartel;
+	}
+
+	public boolean isSuperoferta() {
+		return this == SUPEROFERTA_A4 || this == MEDIA_SUPEROFERTA;
 	}
 
 }

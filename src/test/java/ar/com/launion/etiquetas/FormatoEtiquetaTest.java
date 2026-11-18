@@ -21,6 +21,9 @@ class FormatoEtiquetaTest {
 		assertEquals(FormatoEtiqueta.OFERTA_A4, FormatoEtiqueta.de("oferta-a4"));
 		assertEquals(FormatoEtiqueta.MEDIA_OFERTA, FormatoEtiqueta.de("media-oferta"));
 		assertEquals(FormatoEtiqueta.MEDIA, FormatoEtiqueta.de("media"));
+		assertEquals(FormatoEtiqueta.A4, FormatoEtiqueta.de("a4"));
+		assertEquals(FormatoEtiqueta.SUPEROFERTA_A4, FormatoEtiqueta.de("superoferta-a4"));
+		assertEquals(FormatoEtiqueta.MEDIA_SUPEROFERTA, FormatoEtiqueta.de("media-superoferta"));
 		assertEquals(FormatoEtiqueta.GRANDE, FormatoEtiqueta.de("grande"));
 		assertEquals(FormatoEtiqueta.GRANDE, FormatoEtiqueta.de(null));
 		assertEquals(FormatoEtiqueta.GRANDE, FormatoEtiqueta.de("cualquier cosa"));
@@ -51,17 +54,38 @@ class FormatoEtiquetaTest {
 		assertEquals(1, FormatoEtiqueta.MEDIA.hojasPara(1));
 		assertEquals(2, FormatoEtiqueta.MEDIA_OFERTA.hojasPara(3));
 		assertTrue(FormatoEtiqueta.MEDIA.isHojaVertical());
+		for (FormatoEtiqueta f : List.of(FormatoEtiqueta.A4, FormatoEtiqueta.SUPEROFERTA_A4)) {
+			assertEquals(1, f.getPorHoja());
+			assertFalse(f.isHojaVertical());
+			assertEquals(3, f.hojasPara(3));
+		}
+		assertEquals(2, FormatoEtiqueta.MEDIA_SUPEROFERTA.getPorHoja());
+		assertTrue(FormatoEtiqueta.MEDIA_SUPEROFERTA.isHojaVertical());
+		assertEquals(1, FormatoEtiqueta.MEDIA_SUPEROFERTA.hojasPara(2));
+		assertEquals(2, FormatoEtiqueta.MEDIA_SUPEROFERTA.hojasPara(3));
 	}
 
 	@Test
 	void separaEtiquetasDeCarteles() {
 		assertEquals(List.of(FormatoEtiqueta.GRANDE, FormatoEtiqueta.MINI, FormatoEtiqueta.CHICA), FormatoEtiqueta.grupo(false));
-		assertEquals(List.of(FormatoEtiqueta.OFERTA_A4, FormatoEtiqueta.MEDIA_OFERTA, FormatoEtiqueta.MEDIA), FormatoEtiqueta.grupo(true));
+		assertEquals(List.of(FormatoEtiqueta.OFERTA_A4, FormatoEtiqueta.MEDIA_OFERTA,
+				FormatoEtiqueta.A4, FormatoEtiqueta.MEDIA, FormatoEtiqueta.SUPEROFERTA_A4,
+				FormatoEtiqueta.MEDIA_SUPEROFERTA), FormatoEtiqueta.grupo(true));
 
-		// Solo los carteles usan la imagen de los Word; el de oferta y el sin título tienen fondos distintos
+		// Las dos medidas de cada diseño comparten fondo; los diseños tienen fondos distintos
 		assertNull(FormatoEtiqueta.GRANDE.getFondo());
 		assertEquals(FormatoEtiqueta.OFERTA_A4.getFondo(), FormatoEtiqueta.MEDIA_OFERTA.getFondo());
 		assertFalse(FormatoEtiqueta.MEDIA.getFondo().equals(FormatoEtiqueta.OFERTA_A4.getFondo()));
+		assertEquals(FormatoEtiqueta.MEDIA.getFondo(), FormatoEtiqueta.A4.getFondo());
+		assertEquals(FormatoEtiqueta.SUPEROFERTA_A4.getFondo(), FormatoEtiqueta.MEDIA_SUPEROFERTA.getFondo());
+		assertFalse(FormatoEtiqueta.SUPEROFERTA_A4.getFondo().equals(FormatoEtiqueta.OFERTA_A4.getFondo()));
+		assertEquals("cartel cartel-a4 cartel-sin-titulo", FormatoEtiqueta.A4.getClases());
+		assertEquals("cartel cartel-a4 cartel-superoferta", FormatoEtiqueta.SUPEROFERTA_A4.getClases());
+		assertEquals("cartel cartel-media cartel-superoferta", FormatoEtiqueta.MEDIA_SUPEROFERTA.getClases());
+		assertTrue(FormatoEtiqueta.SUPEROFERTA_A4.isSuperoferta());
+		assertTrue(FormatoEtiqueta.MEDIA_SUPEROFERTA.isSuperoferta());
+		assertFalse(FormatoEtiqueta.A4.isSuperoferta());
+		assertFalse(FormatoEtiqueta.OFERTA_A4.isSuperoferta());
 	}
 
 	@Test
@@ -72,6 +96,9 @@ class FormatoEtiquetaTest {
 		assertEquals("28 etiquetas de 6,5 × 3 cm", FormatoEtiqueta.CHICA.cantidad(28));
 		assertEquals("1 cartel · A4 · Ofertas de fin de semana", FormatoEtiqueta.OFERTA_A4.cantidad(1));
 		assertEquals("3 carteles · Media A4 · Sin título", FormatoEtiqueta.MEDIA.cantidad(3));
+		assertEquals("1 cartel · A4 · Sin título", FormatoEtiqueta.A4.cantidad(1));
+		assertEquals("1 cartel · A4 · Superoferta", FormatoEtiqueta.SUPEROFERTA_A4.cantidad(1));
+		assertEquals("3 carteles · Media A4 · Superoferta", FormatoEtiqueta.MEDIA_SUPEROFERTA.cantidad(3));
 	}
 
 }

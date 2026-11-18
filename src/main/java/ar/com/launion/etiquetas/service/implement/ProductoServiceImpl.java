@@ -64,6 +64,9 @@ public class ProductoServiceImpl implements ProductoService {
 	@Override
 	@Transactional
 	public Producto guardar(EtiquetaForm form) {
+		if (form.getUnidadesOferta() == null || form.getUnidadesOferta() < 1 || form.getUnidadesOferta() > 99) {
+			throw new IllegalArgumentException("Las unidades de la oferta deben estar entre 1 y 99.");
+		}
 		String codigo = form.getCodigoBarras().trim();
 		Optional<Producto> conEseCodigo = productoRepository.findByCodigoBarras(codigo);
 
@@ -82,6 +85,7 @@ public class ProductoServiceImpl implements ProductoService {
 
 		producto.setNombre(form.getNombre().trim());
 		producto.setPrecio(Precio.parsear(form.getPrecio()));
+		producto.setUnidadesOferta(form.getUnidadesOferta());
 		producto.setCodigoBarras(codigo);
 		producto.setFechaModificacion(LocalDateTime.now());
 		return productoRepository.save(producto);

@@ -43,6 +43,16 @@
 					<small class="error" th:if="${#fields.hasErrors('precio')}" th:errors="*{precio}"></small>
 				</div>
 
+				<div class="campo" id="campoOferta" th:classappend="${#fields.hasErrors('unidadesOferta')} ? 'con-error'"
+					th:hidden="${!formato.superoferta and (form.unidadesOferta == null or form.unidadesOferta <= 1) and !#fields.hasErrors('unidadesOferta')}">
+					<label for="unidadesOferta">Unidades en Superoferta</label>
+					<input type="number" class="entrada" th:field="*{unidadesOferta}" min="1" max="99" step="1"
+						aria-describedby="ayudaOferta" required>
+					<small class="ayuda" id="ayudaOferta">1 = solo precio · 2 = 2 × · 3 = 3 ×. El precio es el total de la oferta.
+						Se aplica a A4 Superoferta y Media A4 Superoferta.</small>
+					<small class="error" th:if="${#fields.hasErrors('unidadesOferta')}">Elegí un número entero entre 1 y 99.</small>
+				</div>
+
 				<div class="campo" th:classappend="${#fields.hasErrors('codigoBarras')} ? 'con-error'">
 					<label for="codigoBarras">Código de barras</label>
 					<input type="text" class="entrada entrada-codigo" th:field="*{codigoBarras}" maxlength="40"
@@ -74,7 +84,7 @@
 				<div class="zona-previa">
 					<div class="marco-etiqueta" data-escala data-escala-mm="130">
 						<div class="previa-formato" th:each="f : ${formatos}" th:data-formato="${f.clave}" th:hidden="${f != formato}">
-							<article th:replace="~{fragments/etiqueta :: etiqueta(${form.nombre}, ${form.precioEntero}, ${form.precioCentavos}, ${form.codigoBarras}, ${hoy}, ${f})}"></article>
+							<article th:replace="~{fragments/etiqueta :: etiqueta(${form.nombre}, ${form.precioEntero}, ${form.precioCentavos}, ${form.codigoBarras}, ${hoy}, ${f}, ${form.unidadesOferta})}"></article>
 						</div>
 					</div>
 				</div>

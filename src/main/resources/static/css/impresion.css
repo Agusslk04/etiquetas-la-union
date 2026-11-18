@@ -167,13 +167,16 @@
 	left: 0;
 }
 
-.formato-oferta-a4 .grilla {
+.formato-oferta-a4 .grilla,
+.formato-a4 .grilla,
+.formato-superoferta-a4 .grilla {
 	grid-template-columns: 297mm;
 	grid-template-rows: 210mm;
 }
 
 .formato-media-oferta .grilla,
-.formato-media .grilla {
+.formato-media .grilla,
+.formato-media-superoferta .grilla {
 	grid-template-columns: 210mm;
 	grid-template-rows: repeat(2, 148.5mm);
 }

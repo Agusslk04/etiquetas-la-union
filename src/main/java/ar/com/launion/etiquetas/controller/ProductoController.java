@@ -59,7 +59,8 @@ public class ProductoController {
 						"encontrado", true,
 						"id", p.getIdProducto(),
 						"nombre", p.getNombre(),
-						"precio", p.getPrecioEditable()))
+						"precio", p.getPrecioEditable(),
+						"unidadesOferta", p.getUnidadesOferta()))
 				.orElse(Map.of("encontrado", false));
 	}
 

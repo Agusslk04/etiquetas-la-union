@@ -10,6 +10,8 @@
 
 	var nombre = document.getElementById('nombre');
 	var precio = document.getElementById('precio');
+	var unidadesOferta = document.getElementById('unidadesOferta');
+	var campoOferta = document.getElementById('campoOferta');
 	var codigo = document.getElementById('codigoBarras');
 	var aviso = document.getElementById('avisoCodigo');
 	var botonImprimir = document.getElementById('botonImprimir');
@@ -54,6 +56,16 @@
 		ajustar();
 	}
 
+	function pintarOferta() {
+		var unidades = Number(unidadesOferta.value);
+		cada('.et-oferta', function (el) {
+			var esOferta = Number.isInteger(unidades) && unidades > 1 && unidades <= 99;
+			el.textContent = esOferta ? unidades + ' ×' : '';
+			el.classList.toggle('vacio', !esOferta);
+		});
+		ajustar();
+	}
+
 	var esperaCodigo;
 	function pintarCodigo() {
 		clearTimeout(esperaCodigo);
@@ -73,7 +85,10 @@
 
 	// Cambiar de tamaño: muestra la vista previa elegida
 	function mostrarFormato() {
-		var elegido = (radiosFormato.filter(function (r) { return r.checked; })[0] || {}).value || 'grande';
+		var radio = radiosFormato.filter(function (r) { return r.checked; })[0];
+		var elegido = radio ? radio.value : 'grande';
+		campoOferta.hidden = !(radio && radio.dataset.superoferta === 'true')
+			&& Number(unidadesOferta.value) === 1 && !campoOferta.classList.contains('con-error');
 		previas.forEach(function (p) { p.hidden = p.dataset.formato !== elegido; });
 		ajustar();
 		Etiquetas.escalar();
@@ -110,8 +125,11 @@
 				if (!nombre.value.trim()) {
 					nombre.value = p.nombre;
 					precio.value = p.precio;
+					unidadesOferta.value = p.unidadesOferta || 1;
 					pintarNombre();
 					pintarPrecio();
+					pintarOferta();
+					mostrarFormato();
 					mostrarAviso('Ya estaba guardado: se cargaron sus datos. Podés cambiar el precio.', 'ok');
 				} else {
 					mostrarAviso('Ya está guardado como «' + p.nombre + '»: se va a actualizar.', 'aviso');
@@ -140,6 +158,7 @@
 
 	nombre.addEventListener('input', pintarNombre);
 	precio.addEventListener('input', pintarPrecio);
+	unidadesOferta.addEventListener('input', pintarOferta);
 	codigo.addEventListener('input', function () {
 		ultimoBuscado = null;
 		mostrarAviso('', '');
@@ -152,6 +171,7 @@
 		mostrarFormato();
 		pintarNombre();
 		pintarPrecio();
+		pintarOferta();
 		pintarCodigo();
 	});
 })();

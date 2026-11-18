@@ -109,6 +109,14 @@
 
 .et-centavos.vacio { display: none; }
 
+.et-oferta {
+	font-size: .85em;
+	align-self: center;
+	margin-right: .15em;
+}
+
+.et-oferta.vacio { display: none; }
+
 /* Pie: fecha · código de barras · precio final */
 .et-lado {
 	position: absolute;
@@ -330,8 +338,8 @@
 }
 
 /* =========================================================
-   Carteles · A4 y media A4 (diseño de los Word de La Unión)
-   El fondo es la imagen del Word; encima van el nombre (recuadro
+   Carteles · A4 y media A4 (diseños de La Unión)
+   El fondo es la imagen de cada diseño; encima van el nombre (recuadro
    blanco o zona libre) y el precio (recuadro amarillo).
    Todo se mide en "u": 1 u = 1 mm en el A4 y 0,707 mm en la media A4,
    que es el mismo diseño achicado.
@@ -390,6 +398,22 @@
 	left: calc(30 * var(--u));
 	right: calc(30 * var(--u));
 	height: calc(56 * var(--u));
+}
+
+/* Superoferta: nombre en el recuadro de borde rojo y precio sobre el amarillo. */
+.cartel-superoferta .et-nombre {
+	top: calc(88.5 * var(--u));
+	left: calc(60 * var(--u));
+	right: calc(60 * var(--u));
+	height: calc(16 * var(--u));
+	color: #111;
+}
+
+.cartel-superoferta .et-precio {
+	top: calc(116 * var(--u));
+	left: calc(30 * var(--u));
+	right: calc(30 * var(--u));
+	height: calc(49 * var(--u));
 }
 
 /* Precio negro sobre el amarillo. Interlineado corto: los números quedan

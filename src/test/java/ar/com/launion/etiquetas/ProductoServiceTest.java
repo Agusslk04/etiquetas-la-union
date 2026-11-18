@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import ar.com.launion.etiquetas.dto.EtiquetaForm;
 import ar.com.launion.etiquetas.entity.Producto;
@@ -35,6 +36,9 @@ class ProductoServiceTest {
 
 	@Autowired
 	private CargaRepository cargaRepository;
+
+	@Autowired
+	private JdbcTemplate jdbc;
 
 	@BeforeEach
 	void limpiar() {
@@ -68,6 +72,53 @@ class ProductoServiceTest {
 		EtiquetaForm edicion = EtiquetaForm.desde(azucar);
 		edicion.setCodigoBarras("111");
 		assertThrows(IllegalArgumentException.class, () -> productoService.guardar(edicion));
+	}
+
+	@Test
+	void conservaLasUnidadesDeSuperofertaSinMultiplicarElPrecio() {
+		EtiquetaForm oferta = form("Alfajor Genio", "1.100", "OFERTA-3");
+		oferta.setUnidadesOferta(3);
+		Long id = productoService.guardar(oferta).getIdProducto();
+		Producto guardado = productoService.buscarPorId(id);
+		assertEquals(3, guardado.getUnidadesOferta());
+		assertEquals("1.100", guardado.getPrecioEditable());
+
+		productoService.agregarAHoja(List.of(id));
+		productoService.actualizarHoja(List.of(id), List.of("1.200,50"), List.of("2"));
+		assertEquals(2, productoService.etiquetasDeLaHoja().size());
+		assertTrue(productoService.etiquetasDeLaHoja().stream().allMatch(p -> p.getUnidadesOferta() == 3));
+
+		EtiquetaForm edicion = EtiquetaForm.desde(productoService.buscarPorId(id));
+		assertEquals(3, edicion.getUnidadesOferta());
+		edicion.setUnidadesOferta(2);
+		productoService.guardar(edicion);
+		assertEquals(2, productoService.buscarPorId(id).getUnidadesOferta());
+		edicion.setUnidadesOferta(1);
+		productoService.guardar(edicion);
+		assertEquals(1, productoService.buscarPorId(id).getUnidadesOferta());
+		assertEquals("1.200,50", productoService.buscarPorId(id).getPrecioEditable());
+	}
+
+	@Test
+	void productosAnterioresEImportadosUsanPrecioSimple() {
+		assertEquals(1, new Producto().getUnidadesOferta());
+		Long id = productoService.guardar(form("Producto anterior", "900", "ANTERIOR")).getIdProducto();
+		// La columna nueva queda en null en los registros creados antes de la actualización.
+		jdbc.update("update producto set unidades_oferta = null where id_producto = ?", id);
+		Producto anterior = productoService.buscarPorId(id);
+		assertEquals(1, anterior.getUnidadesOferta());
+		assertEquals(1, EtiquetaForm.desde(anterior).getUnidadesOferta());
+		assertEquals("900", anterior.getPrecioEditable());
+	}
+
+	@Test
+	void rechazaUnidadesDeOfertaInvalidas() {
+		EtiquetaForm oferta = form("Oferta", "1000", "INVALIDA");
+		for (Integer unidades : new Integer[] { null, -1, 0, 100 }) {
+			oferta.setUnidadesOferta(unidades);
+			assertThrows(IllegalArgumentException.class, () -> productoService.guardar(oferta));
+		}
+		assertEquals(0, productoRepository.count());
 	}
 
 	@Test
